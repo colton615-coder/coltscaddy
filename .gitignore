@@ -1,0 +1,6 @@
+COLTSCADDY.xcodeproj/project.xcworkspace/xcuserdata/
+COLTSCADDY.xcodeproj/xcuserdata/
+*.xcuserstate
+.DS_Store
+build/
+DerivedData/
