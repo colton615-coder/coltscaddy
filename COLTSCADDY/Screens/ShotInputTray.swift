@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ShotInputTray: View {
-    enum ShotType: String, CaseIterable, Identifiable {
+    enum ShotTypeOption: String, CaseIterable, Identifiable {
         case full = "Full"
         case chip = "Chip"
         case putt = "Putt"
@@ -10,7 +10,7 @@ struct ShotInputTray: View {
         var id: String { rawValue }
     }
 
-    enum Lie: String, CaseIterable, Identifiable {
+    enum LieOption: String, CaseIterable, Identifiable {
         case tee = "Tee"
         case fairway = "Fairway"
         case rough = "Rough"
@@ -19,65 +19,67 @@ struct ShotInputTray: View {
         var id: String { rawValue }
     }
 
-    enum Trouble: String, CaseIterable, Identifiable {
+    enum TroubleOption: String, CaseIterable, Identifiable {
         case water = "Water"
         case ob = "OB"
         case trees = "Trees"
         case bunker = "Bunker"
-        case none = "None"
 
         var id: String { rawValue }
     }
 
-    let onSubmit: (String) -> Void
+    let onSubmit: (ShotSubmission) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @State private var shotType: ShotType = .full
-    @State private var lie: Lie = .fairway
-    @State private var selectedTrouble: Set<Trouble> = [.none]
+    @State private var shotType: ShotTypeOption = .full
+    @State private var lie: LieOption = .fairway
+    @State private var selectedTrouble: Set<TroubleOption> = []
     @State private var distance = ""
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.lg) {
-            Text("Build the shot")
-                .font(DS.Font.playCall)
-                .foregroundStyle(DS.Color.textPrimary)
-
+        ScrollView {
             VStack(alignment: .leading, spacing: DS.Spacing.lg) {
-                SingleSelectSection(title: "Shot type", options: ShotType.allCases, selection: $shotType)
-                SingleSelectSection(title: "Lie", options: Lie.allCases, selection: $lie)
-                troubleSection
-                distanceSection
-            }
+                Text("Build the shot")
+                    .font(DS.Font.playCall)
+                    .foregroundStyle(DS.Color.textPrimary)
 
-            Button {
-                onSubmit(summary)
-                dismiss()
-            } label: {
-                Text("Ask the caddie")
-                    .font(DS.Font.label)
-                    .foregroundStyle(DS.Color.accentInk)
-                    .frame(maxWidth: .infinity)
-                    .frame(minHeight: DS.Size.tapTarget)
-                    .background(
-                        RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
-                            .fill(DS.Color.accent)
-                    )
+                VStack(alignment: .leading, spacing: DS.Spacing.lg) {
+                    SingleSelectSection(title: "Shot type", options: ShotTypeOption.allCases, selection: $shotType)
+                    SingleSelectSection(title: "Lie", options: LieOption.allCases, selection: $lie)
+                    troubleSection
+                    distanceSection
+                }
+
+                Button {
+                    onSubmit(submission)
+                    dismiss()
+                } label: {
+                    Text("Ask the caddie")
+                        .font(DS.Font.label)
+                        .foregroundStyle(DS.Color.accentInk)
+                        .frame(maxWidth: .infinity)
+                        .frame(minHeight: DS.Size.tapTarget)
+                        .background(
+                            RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
+                                .fill(DS.Color.accent)
+                        )
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
+            .padding(.top, DS.Spacing.xl)
+            .padding(.horizontal, DS.Spacing.xl)
+            .padding(.bottom, DS.Spacing.xl)
         }
-        .padding(.top, DS.Spacing.xl)
-        .padding(.horizontal, DS.Spacing.xl)
-        .padding(.bottom, DS.Spacing.xl)
+        .scrollIndicators(.hidden)
         .background(DS.Color.bg.ignoresSafeArea())
-        .presentationDetents([.height(480)])
+        .presentationDetents([.fraction(0.72), .large])
     }
 
     private var troubleSection: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.sm) {
             FieldLabel("Trouble")
 
-            TroublePillGrid(options: Trouble.allCases) { trouble in
+            TroublePillGrid(options: TroubleOption.allCases) { trouble in
                 PillButton(title: trouble.rawValue, isSelected: selectedTrouble.contains(trouble)) {
                     toggleTrouble(trouble)
                 }
@@ -117,14 +119,26 @@ struct ShotInputTray: View {
         return "\(distanceText), \(lie.rawValue.lowercased()), \(shotType.rawValue.lowercased()) shot, \(troubleText)."
     }
 
-    private var readableTrouble: String {
-        let activeTrouble = selectedTrouble.filter { $0 != .none }
+    private var submission: ShotSubmission {
+        let trimmedDistance = distance.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard !activeTrouble.isEmpty else {
+        return ShotSubmission(
+            input: CaddyShotInput(
+                shotType: shotType.domainValue,
+                lie: lie.domainValue,
+                trouble: selectedTrouble.map(\.domainValue).sorted { $0.rawValue < $1.rawValue },
+                distanceYards: Int(trimmedDistance) ?? 0
+            ),
+            summary: summary
+        )
+    }
+
+    private var readableTrouble: String {
+        guard !selectedTrouble.isEmpty else {
             return "no trouble marked"
         }
 
-        let names = activeTrouble
+        let names = selectedTrouble
             .map(\.rawValue)
             .sorted()
             .map { $0.lowercased() }
@@ -133,22 +147,49 @@ struct ShotInputTray: View {
         return "trouble marked: \(names)"
     }
 
-    private func toggleTrouble(_ trouble: Trouble) {
-        if trouble == .none {
-            selectedTrouble = [.none]
-            return
-        }
-
-        selectedTrouble.remove(.none)
-
+    private func toggleTrouble(_ trouble: TroubleOption) {
         if selectedTrouble.contains(trouble) {
             selectedTrouble.remove(trouble)
         } else {
             selectedTrouble.insert(trouble)
         }
+    }
+}
 
-        if selectedTrouble.isEmpty {
-            selectedTrouble = [.none]
+struct ShotSubmission: Equatable {
+    let input: CaddyShotInput
+    let summary: String
+}
+
+private extension ShotInputTray.ShotTypeOption {
+    var domainValue: ShotType {
+        switch self {
+        case .full: .full
+        case .chip: .chip
+        case .putt: .putt
+        case .tee: .tee
+        }
+    }
+}
+
+private extension ShotInputTray.LieOption {
+    var domainValue: Lie {
+        switch self {
+        case .tee: .tee
+        case .fairway: .fairway
+        case .rough: .rough
+        case .sand: .sand
+        }
+    }
+}
+
+private extension ShotInputTray.TroubleOption {
+    var domainValue: Trouble {
+        switch self {
+        case .water: .water
+        case .ob: .ob
+        case .trees: .trees
+        case .bunker: .bunker
         }
     }
 }

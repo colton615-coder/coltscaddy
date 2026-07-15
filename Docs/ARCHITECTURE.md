@@ -6,7 +6,7 @@
 - SwiftData (persistence is in scope for v1)
 - Swift
 - iOS 26+ (deployment target 26.5, matching project.pbxproj)
-- Anthropic API for the caddie voice (pay-per-use; the ONLY paid service)
+- Provider-neutral backend endpoint for the caddie voice
 
 ## The Split (most important rule in this file)
 
@@ -15,6 +15,12 @@ testable without a network connection. The LLM never chooses the club, the
 target, the safe miss, or the confidence. The LLM receives the engine's
 structured decision and renders it in the caddie's voice. If the network is
 down, the app still produces a correct (if flatly worded) Caddy Call.
+
+The iOS app never imports an AI-provider SDK and never stores a provider API
+key. It posts the shot context and completed CaddyDecision to the configured
+`CADDY_VOICE_ENDPOINT`; provider selection and credentials live behind that
+backend boundary. The backend returns `{ "assistantText": "..." }` and is not
+allowed to alter the structured decision.
 
 ## Target Folder Structure
 

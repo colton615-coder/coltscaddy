@@ -2,8 +2,8 @@
 
 ## SINGLE NEXT ACTION
 
-Wire persistence: create the ModelContainer at app entry and attach the
-SwiftData schema. (Phase 4, item 1 below.)
+Wire `Log result` on the CaddyCallCard to write exactly one ShotHistory record
+through a named store function. (Phase 4, item 6 below.)
 
 ---
 
@@ -18,16 +18,19 @@ Theme, MessageBubble, ChatInputBar, CaddyCallCard, ShotInputTray.
 NOTE: color/aesthetic direction NOT locked — current look is placeholder.
 
 ## Phase 4 — Core recommendation flow 👉 YOU ARE HERE
-1. Wire ModelContainer at app entry; attach full schema.  ← NEXT ACTION
-2. Seed PlayerProfile with Colt's bag distances (typed once, editable).
+1. Wire ModelContainer at app entry; attach full schema. ✅ DONE
+2. Seed PlayerProfile with Colt's bag distances (typed once, editable). ✅ DONE
+   NOTE: seeded carries are placeholders — Colt corrects them in the bag
+   editor (golfer button, top right of the thread).
 3. Build CaddyEngine v1: deterministic rules per CADDY_LOGIC.md, pure Swift,
-   no UI imports, unit-testable.
+   no UI imports, unit-testable. ✅ DONE
 4. Wire ShotInputTray output into CaddyEngine instead of the placeholder
-   string; render the result as a CaddyCallCard in the thread.
-5. Move CaddyCallCard from DesignSystem/ to Components/.
+   string. ✅ DONE
+5. Render the decision as a CaddyCallCard in the thread and move
+   CaddyCallCard from DesignSystem/ to Components/. ✅ DONE
 6. Log result flow: "Log result" on the card writes a ShotHistory record.
-7. LLM voice layer: engine decision in, caddie-voiced copy out, with offline
-   flat-wording fallback.
+7. Provider-neutral voice layer: engine decision in, caddie-voiced copy out,
+   with offline flat-wording fallback. ✅ DONE (backend implementation pending)
 
 ## Phase 5 — Visual lock + polish
 Lock the color system and aesthetic direction (Colt decides from mockups),

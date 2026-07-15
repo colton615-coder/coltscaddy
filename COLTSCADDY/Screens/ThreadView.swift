@@ -1,13 +1,25 @@
 import SwiftUI
+import SwiftData
 
 struct ThreadView: View {
+    @Query private var profiles: [PlayerProfile]
     @State private var messages: [ThreadMessage] = [
         ThreadMessage(
-            text: "Good to see you, Colt. Tell me what you're facing and I'll give you the smart play.",
-            sender: .them
+            content: .text(
+                "Good to see you, Colt. Tell me what you're facing and I'll give you the smart play.",
+                sender: .them
+            )
         )
     ]
     @State private var isShotInputPresented = false
+    @State private var isBagEditorPresented = false
+    @State private var isAwaitingCaddyResponse = false
+
+    private let voiceService: CaddyVoiceService
+
+    init(voiceService: CaddyVoiceService = .live) {
+        self.voiceService = voiceService
+    }
 
     var body: some View {
         VStack(spacing: DS.Spacing.lg) {
@@ -17,13 +29,41 @@ struct ThreadView: View {
         .padding(.horizontal, DS.Spacing.xl)
         .padding(.bottom, DS.Spacing.md)
         .background(DS.Color.bg.ignoresSafeArea())
+        .overlay(alignment: .topTrailing) {
+            bagButton
+                .padding(.trailing, DS.Spacing.xl)
+                .padding(.top, DS.Spacing.sm)
+        }
         .sheet(isPresented: $isShotInputPresented) {
-            ShotInputTray { summary in
-                addShotSummary(summary)
+            ShotInputTray { submission in
+                addShot(submission)
             }
-            .presentationDetents([.medium])
             .presentationDragIndicator(.visible)
         }
+        .sheet(isPresented: $isBagEditorPresented) {
+            BagEditorView()
+                .presentationDragIndicator(.visible)
+        }
+    }
+
+    private var bagButton: some View {
+        Button {
+            isBagEditorPresented = true
+        } label: {
+            Image(systemName: "figure.golf")
+                .font(DS.Font.label)
+                .foregroundStyle(DS.Color.textPrimary)
+                .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
+                        .fill(DS.Color.surface)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
+                        .stroke(DS.Color.hairline)
+                )
+        }
+        .buttonStyle(.plain)
     }
 
     private var conversationFeed: some View {
@@ -31,7 +71,7 @@ struct ThreadView: View {
             ScrollView {
                 LazyVStack(spacing: DS.Spacing.xl) {
                     ForEach(messages) { message in
-                        MessageBubble(text: message.text, sender: message.sender)
+                        threadItem(for: message)
                             .id(message.id)
                     }
                 }
@@ -67,14 +107,60 @@ struct ThreadView: View {
                     )
             }
             .buttonStyle(.plain)
+            .disabled(isAwaitingCaddyResponse)
 
             ChatInputBar()
         }
     }
 
-    private func addShotSummary(_ summary: String) {
-        messages.append(ThreadMessage(text: summary, sender: .me))
-        messages.append(ThreadMessage(text: "Got it — I can see the shot clearly. I'll have your read the moment my decision engine is wired up.", sender: .them))
+    private func addShot(_ submission: ShotSubmission) {
+        messages.append(ThreadMessage(content: .text(submission.summary, sender: .me)))
+        isAwaitingCaddyResponse = true
+
+        let decision = CaddyEngine.recommend(for: submission.input, bag: currentBag)
+        let voiceInput = CaddyVoiceInput(shot: submission.input, decision: decision)
+
+        Task {
+            let response = await voiceService.response(for: voiceInput)
+            messages.append(ThreadMessage(content: .text(response, sender: .them)))
+            messages.append(ThreadMessage(content: .caddyCall(decision)))
+            isAwaitingCaddyResponse = false
+        }
+    }
+
+    @ViewBuilder
+    private func threadItem(for message: ThreadMessage) -> some View {
+        switch message.content {
+        case let .text(text, sender):
+            MessageBubble(text: text, sender: sender)
+        case let .caddyCall(decision):
+            CaddyCallCard(
+                play: decision.play,
+                target: decision.target,
+                safeMiss: decision.safeMiss,
+                why: decision.why,
+                confidence: decision.confidence.displayLabel,
+                alternate: .init(
+                    type: decision.alternate.type,
+                    text: decision.alternate.text
+                )
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private var currentBag: [CaddyBagClub] {
+        let savedBag = profiles.first?.clubDistances.map {
+            CaddyBagClub(name: $0.clubName, carryYards: $0.carryYards)
+        } ?? []
+
+        guard !savedBag.isEmpty else {
+            return ProfileSeeder.defaultBag.map {
+                CaddyBagClub(name: $0.name, carryYards: $0.carryYards)
+            }
+        }
+
+        return savedBag
     }
 
     private func scrollToLatest(using proxy: ScrollViewProxy) {
@@ -87,9 +173,28 @@ struct ThreadView: View {
 }
 
 private struct ThreadMessage: Identifiable {
+    enum Content {
+        case text(String, sender: MessageBubble.Sender)
+        case caddyCall(CaddyDecision)
+    }
+
     let id = UUID()
-    let text: String
-    let sender: MessageBubble.Sender
+    let content: Content
+}
+
+private extension ConfidenceBand {
+    var displayLabel: String {
+        switch self {
+        case .low:
+            "Low"
+        case .medium:
+            "Medium"
+        case .mediumHigh:
+            "Medium-high"
+        case .high:
+            "High"
+        }
+    }
 }
 
 #Preview {

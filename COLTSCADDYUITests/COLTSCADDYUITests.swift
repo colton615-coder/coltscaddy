@@ -23,14 +23,34 @@ final class COLTSCADDYUITests: XCTestCase {
     }
 
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testSubmittingShotRendersStructuredCaddyCallCard() throws {
         let app = XCUIApplication()
         app.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // XCUIAutomation Documentation
-        // https://developer.apple.com/documentation/xcuiautomation
+        app.buttons["+"].tap()
+
+        let distanceField = app.textFields.firstMatch
+        XCTAssertTrue(distanceField.waitForExistence(timeout: 2))
+        distanceField.tap()
+        distanceField.typeText("165")
+
+        app.buttons["Ask the caddie"].tap()
+
+        XCTAssertTrue(app.staticTexts["CADDY CALL"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Target:'")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Safe miss:'")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Why:'")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Alternate safer:'")).firstMatch.exists)
+        XCTAssertTrue(app.buttons["Remind me how"].exists)
+
+        let logResultButton = app.buttons["Log result"]
+        XCTAssertTrue(logResultButton.exists)
+        XCTAssertTrue(logResultButton.isHittable)
+
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "Phase A Caddy Call Card"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     @MainActor
