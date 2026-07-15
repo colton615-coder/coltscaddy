@@ -138,3 +138,54 @@ repo's written record in line with decisions already made)
 
 - Configure the intended repository remote, then push the `main` branch. Do not
   call the phase shipped until that push succeeds.
+
+## 2026-07-15 — Phase 4 ShotHistory logging checkpoint
+
+### Decisions locked
+
+- `ShotHistoryStore.log(shot:decision:in:)` is the single named write path for
+  logging a Caddy Call result.
+- The store creates the related ShotContext from the original CaddyShotInput and
+  persists the engine's primary `decision.play` text as `recommendationGiven`.
+- A card becomes locally logged only after the SwiftData save succeeds. Its
+  `Log result` action is then disabled so repeat taps cannot create duplicates
+  for that card.
+- Outcome, miss direction, contact quality, and followed-recommendation fields
+  remain nil. No outcome-entry UI was added.
+- Tendency learning remains dormant and is not read or written by this flow.
+
+### Implemented and proved
+
+- Added ShotHistoryStore and routed the card action through it; the view does
+  not insert SwiftData models directly.
+- Added a focused in-memory SwiftData test proving one ShotHistory record is
+  saved with the correct shot type, lie, trouble, distance, nuance, and engine
+  recommendation. The deferred outcome fields remain nil.
+- A generic iOS Simulator build succeeded.
+- The focused ShotHistoryStore test passed on the iOS 26.5 `26.5 sim2`
+  simulator.
+- The complete COLTSCADDYTests unit-test target passed on that simulator: 16
+  test cases passed.
+- The focused simulator UI test submitted a shot, tapped `Log result`, and
+  passed after confirming the action became disabled. The test completed in
+  10.337 seconds and kept a screenshot attachment.
+- The complete COLTSCADDYUITests target returned `TEST SUCCEEDED`. The xcresult
+  summary reported `Passed`, three tests, six executions, and zero failures or
+  skips on the iOS 26.5 simulator.
+- `git diff --check` succeeded.
+
+### Not proved
+
+- No physical-device run was performed.
+- This phase cannot be pushed because the checkout has no configured Git
+  remote. It is not shipped until a future push succeeds.
+
+### Runner warning and recovery path
+
+- During the otherwise successful complete UI run, Xcode logged failed launches
+  for two auxiliary simulator clones. Those errors did not become test failures:
+  the primary clone completed every recorded test and the xcresult contains zero
+  failures.
+- If a future complete UI run reports an actual failed test, reset or recreate
+  the affected simulator clones and rerun the focused card flow first, then the
+  complete UI target.

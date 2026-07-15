@@ -12,6 +12,7 @@ struct CaddyCallCard: View {
     let why: String
     let confidence: String
     let alternate: Alternate?
+    let isLogResultEnabled: Bool
     let remindAction: () -> Void
     let logAction: () -> Void
 
@@ -22,6 +23,7 @@ struct CaddyCallCard: View {
         why: String,
         confidence: String,
         alternate: Alternate? = nil,
+        isLogResultEnabled: Bool = true,
         remindAction: @escaping () -> Void = {},
         logAction: @escaping () -> Void = {}
     ) {
@@ -31,6 +33,7 @@ struct CaddyCallCard: View {
         self.why = why
         self.confidence = confidence
         self.alternate = alternate
+        self.isLogResultEnabled = isLogResultEnabled
         self.remindAction = remindAction
         self.logAction = logAction
     }
@@ -70,6 +73,7 @@ struct CaddyCallCard: View {
                     .font(DS.Font.label)
                     .foregroundStyle(DS.Color.textTertiary)
                 quietButton("Log result", action: logAction)
+                    .disabled(!isLogResultEnabled)
             }
         }
         .padding(DS.Spacing.lg)

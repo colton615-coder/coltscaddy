@@ -46,9 +46,14 @@ final class COLTSCADDYUITests: XCTestCase {
         let logResultButton = app.buttons["Log result"]
         XCTAssertTrue(logResultButton.exists)
         XCTAssertTrue(logResultButton.isHittable)
+        XCTAssertTrue(logResultButton.isEnabled)
+
+        logResultButton.tap()
+
+        XCTAssertFalse(logResultButton.isEnabled)
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = "Phase A Caddy Call Card"
+        attachment.name = "Phase B Logged Caddy Call Card"
         attachment.lifetime = .keepAlways
         add(attachment)
     }

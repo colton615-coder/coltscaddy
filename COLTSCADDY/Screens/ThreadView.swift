@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct ThreadView: View {
+    @Environment(\.modelContext) private var modelContext
     @Query private var profiles: [PlayerProfile]
     @State private var messages: [ThreadMessage] = [
         ThreadMessage(
@@ -123,7 +124,13 @@ struct ThreadView: View {
         Task {
             let response = await voiceService.response(for: voiceInput)
             messages.append(ThreadMessage(content: .text(response, sender: .them)))
-            messages.append(ThreadMessage(content: .caddyCall(decision)))
+            messages.append(
+                ThreadMessage(
+                    content: .caddyCall(
+                        CaddyCallItem(shot: submission.input, decision: decision)
+                    )
+                )
+            )
             isAwaitingCaddyResponse = false
         }
     }
@@ -133,19 +140,43 @@ struct ThreadView: View {
         switch message.content {
         case let .text(text, sender):
             MessageBubble(text: text, sender: sender)
-        case let .caddyCall(decision):
+        case let .caddyCall(call):
             CaddyCallCard(
-                play: decision.play,
-                target: decision.target,
-                safeMiss: decision.safeMiss,
-                why: decision.why,
-                confidence: decision.confidence.displayLabel,
+                play: call.decision.play,
+                target: call.decision.target,
+                safeMiss: call.decision.safeMiss,
+                why: call.decision.why,
+                confidence: call.decision.confidence.displayLabel,
                 alternate: .init(
-                    type: decision.alternate.type,
-                    text: decision.alternate.text
-                )
+                    type: call.decision.alternate.type,
+                    text: call.decision.alternate.text
+                ),
+                isLogResultEnabled: !call.isLogged,
+                logAction: {
+                    logResult(for: message.id)
+                }
             )
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private func logResult(for messageID: UUID) {
+        guard let index = messages.firstIndex(where: { $0.id == messageID }),
+              case var .caddyCall(call) = messages[index].content,
+              !call.isLogged else {
+            return
+        }
+
+        do {
+            try ShotHistoryStore.log(
+                shot: call.shot,
+                decision: call.decision,
+                in: modelContext
+            )
+            call.isLogged = true
+            messages[index].content = .caddyCall(call)
+        } catch {
+            assertionFailure("Failed to log the shot result: \(error)")
         }
     }
 
@@ -175,11 +206,17 @@ struct ThreadView: View {
 private struct ThreadMessage: Identifiable {
     enum Content {
         case text(String, sender: MessageBubble.Sender)
-        case caddyCall(CaddyDecision)
+        case caddyCall(CaddyCallItem)
     }
 
     let id = UUID()
-    let content: Content
+    var content: Content
+}
+
+private struct CaddyCallItem {
+    let shot: CaddyShotInput
+    let decision: CaddyDecision
+    var isLogged = false
 }
 
 private extension ConfidenceBand {

@@ -2,8 +2,8 @@
 
 ## SINGLE NEXT ACTION
 
-Wire `Log result` on the CaddyCallCard to write exactly one ShotHistory record
-through a named store function. (Phase 4, item 6 below.)
+Create visual mockups for Colt to choose and lock the color system and
+aesthetic direction before changing Theme.swift. (Phase 5 below.)
 
 ---
 
@@ -17,7 +17,7 @@ ShotContext, ShotHistory, PlayerProfile, ClubDistance, Tendency, CoachingCue.
 Theme, MessageBubble, ChatInputBar, CaddyCallCard, ShotInputTray.
 NOTE: color/aesthetic direction NOT locked — current look is placeholder.
 
-## Phase 4 — Core recommendation flow 👉 YOU ARE HERE
+## Phase 4 — Core recommendation flow ✅ DONE
 1. Wire ModelContainer at app entry; attach full schema. ✅ DONE
 2. Seed PlayerProfile with Colt's bag distances (typed once, editable). ✅ DONE
    NOTE: seeded carries are placeholders — Colt corrects them in the bag
@@ -28,11 +28,11 @@ NOTE: color/aesthetic direction NOT locked — current look is placeholder.
    string. ✅ DONE
 5. Render the decision as a CaddyCallCard in the thread and move
    CaddyCallCard from DesignSystem/ to Components/. ✅ DONE
-6. Log result flow: "Log result" on the card writes a ShotHistory record.
+6. Log result flow: "Log result" on the card writes a ShotHistory record. ✅ DONE
 7. Provider-neutral voice layer: engine decision in, caddie-voiced copy out,
    with offline flat-wording fallback. ✅ DONE (backend implementation pending)
 
-## Phase 5 — Visual lock + polish
+## Phase 5 — Visual lock + polish 👉 YOU ARE HERE
 Lock the color system and aesthetic direction (Colt decides from mockups),
 apply it through Theme.swift, then polish spacing/motion.
 
