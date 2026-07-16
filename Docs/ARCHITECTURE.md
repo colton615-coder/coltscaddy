@@ -46,8 +46,8 @@ creating files.
 ## Design System Rules
 
 - SF Symbols only, one weight, used sparingly. Prefer text labels.
-- Dark, premium, editorial. One accent color, used sparingly.
+- The visual direction is locked as Range Finder: near-black with cool grays,
+  one cyan accent, and SF Rounded throughout. No serif.
+- Color carries meaning and is not decorative: cyan is the accent, green is
+  confidence, and amber is the alternate play.
 - 44pt minimum tap targets. Generous whitespace.
-- NOTE: the current dark/gold/serif rendering is unintentional default
-  styling, NOT a locked direction. The color system and visual aesthetic are
-  explicitly NOT LOCKED. Do not treat Theme.swift's current values as final.

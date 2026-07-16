@@ -2,8 +2,8 @@
 
 ## SINGLE NEXT ACTION
 
-Create visual mockups for Colt to choose and lock the color system and
-aesthetic direction before changing Theme.swift. (Phase 5 below.)
+Phase 5.2: Polish the Caddy Call card layout hierarchy using the locked Range
+Finder design tokens.
 
 ---
 
@@ -15,7 +15,8 @@ ShotContext, ShotHistory, PlayerProfile, ClubDistance, Tendency, CoachingCue.
 
 ## Phase 3 — Design system ✅ DONE (structure only)
 Theme, MessageBubble, ChatInputBar, CaddyCallCard, ShotInputTray.
-NOTE: color/aesthetic direction NOT locked — current look is placeholder.
+NOTE: Phase 3 established structure only; Phase 5.1 later locked the Range
+Finder color and typography direction.
 
 ## Phase 4 — Core recommendation flow ✅ DONE
 1. Wire ModelContainer at app entry; attach full schema. ✅ DONE
@@ -33,8 +34,9 @@ NOTE: color/aesthetic direction NOT locked — current look is placeholder.
    with offline flat-wording fallback. ✅ DONE (backend implementation pending)
 
 ## Phase 5 — Visual lock + polish 👉 YOU ARE HERE
-Lock the color system and aesthetic direction (Colt decides from mockups),
-apply it through Theme.swift, then polish spacing/motion.
+1. **5.1 — Lock Range Finder tokens in Theme.swift.** ✅ DONE
+2. **5.2 — Polish the Caddy Call card layout hierarchy.** 👉 SINGLE NEXT ACTION
+3. Polish spacing and motion.
 
 ## Phase 6 — v2 and beyond (do NOT start any of this)
 - Activate tendency learning behavior (lifecycle already modeled)

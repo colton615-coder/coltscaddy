@@ -2,32 +2,43 @@ import SwiftUI
 
 enum DS {
     enum Color {
-        static let bg = SwiftUI.Color(hex: 0x0B0B0C)
-        static let surface = SwiftUI.Color(hex: 0x161618)
-        static let surfaceBubbleThem = SwiftUI.Color(hex: 0x1C1D20)
-        static let surfaceBubbleMe = SwiftUI.Color(hex: 0x26333A)
-        static let hairline = SwiftUI.Color.rgba(red: 255, green: 255, blue: 255, alpha: 0.08)
-        static let textPrimary = SwiftUI.Color(hex: 0xF4F3F1)
-        static let textSecondary = SwiftUI.Color.rgba(red: 244, green: 243, blue: 241, alpha: 0.55)
-        static let textTertiary = SwiftUI.Color.rgba(red: 244, green: 243, blue: 241, alpha: 0.35)
-        static let accent = SwiftUI.Color(hex: 0xC9A96A)
-        static let accentInk = SwiftUI.Color(hex: 0x1A1509)
+        static let bg = SwiftUI.Color(hex: 0x08090A)
+        static let surface = SwiftUI.Color(hex: 0x121417)
+        static let surfaceBubbleThem = SwiftUI.Color(hex: 0x141719)
+        static let surfaceBubbleMe = SwiftUI.Color(hex: 0x1D2A31)
+        static let hairline = SwiftUI.Color.rgba(red: 255, green: 255, blue: 255, alpha: 0.10)
+        static let textPrimary = SwiftUI.Color(hex: 0xF5F7F8)
+        static let textSecondary = SwiftUI.Color(hex: 0x8A949B)
+        static let textTertiary = SwiftUI.Color(hex: 0x5C666D)
+        static let accent = SwiftUI.Color(hex: 0x4CC9F0)
+        static let accentInk = SwiftUI.Color(hex: 0x04222B)
+        static let confidence = SwiftUI.Color(hex: 0x3DDC97)
+        static let confidenceFill = SwiftUI.Color.rgba(red: 61, green: 220, blue: 151, alpha: 0.12)
+        static let alternate = SwiftUI.Color(hex: 0xF5B841)
     }
 
     enum Font {
-        static let caddieSpeak = SwiftUI.Font.system(size: Size.caddieSpeak, weight: .regular, design: .serif)
-        static let playCall = SwiftUI.Font.system(size: Size.playCall, weight: .semibold, design: .serif)
-        static let body = SwiftUI.Font.system(size: Size.body, weight: .regular, design: .default)
-        static let label = SwiftUI.Font.system(size: Size.label, weight: .medium, design: .default)
-        static let caption = SwiftUI.Font.system(size: Size.caption, weight: .semibold, design: .default)
-        static let captionTracking = Size.caption * 0.08
+        static let playCall = SwiftUI.Font.system(size: Size.playCall, weight: .semibold, design: .rounded)
+        static let playDistance = SwiftUI.Font.system(size: Size.playDistance, weight: .semibold, design: .rounded)
+        static let fieldLabel = SwiftUI.Font.system(size: Size.fieldLabel, weight: .semibold, design: .rounded)
+        static let fieldValue = SwiftUI.Font.system(size: Size.fieldValue, weight: .regular, design: .rounded)
+        static let caddieSpeak = SwiftUI.Font.system(size: Size.caddieSpeak, weight: .regular, design: .rounded)
+        static let body = SwiftUI.Font.system(size: Size.body, weight: .regular, design: .rounded)
+        static let label = SwiftUI.Font.system(size: Size.label, weight: .medium, design: .rounded)
+        static let caption = SwiftUI.Font.system(size: Size.caption, weight: .semibold, design: .rounded)
+        static let badge = SwiftUI.Font.system(size: Size.badge, weight: .medium, design: .rounded)
+        static let captionTracking = Size.caption * 0.12
 
         private enum Size {
-            static let caddieSpeak: CGFloat = 22
-            static let playCall: CGFloat = 19
-            static let body: CGFloat = 16
-            static let label: CGFloat = 13
-            static let caption: CGFloat = 11
+            static let playCall: CGFloat = 44
+            static let playDistance: CGFloat = 26
+            static let fieldLabel: CGFloat = 19
+            static let fieldValue: CGFloat = 15
+            static let caddieSpeak: CGFloat = 16
+            static let body: CGFloat = 15
+            static let label: CGFloat = 14
+            static let caption: CGFloat = 12
+            static let badge: CGFloat = 11
         }
     }
 

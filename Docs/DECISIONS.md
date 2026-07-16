@@ -1,5 +1,13 @@
 # Decisions
 
+## 2026-07-15 — Range Finder visual lock
+
+- Colt chose the Range Finder direction from reviewed mockups.
+- The visual system is locked to near-black with cool grays, one cyan accent,
+  and SF Rounded throughout. Serif is retired.
+- Color carries meaning and is not decorative: cyan is the accent, green is
+  confidence, and amber is the alternate play.
+
 ## 2026-07-11
 
 - Project name kept as COLTSCADDY (all caps, no space); display name Colt's Caddy.
