@@ -95,7 +95,7 @@ struct ThreadView: View {
                 isShotInputPresented = true
             } label: {
                 Text("+")
-                    .font(DS.Font.playCall)
+                    .font(DS.Font.screenTitle)
                     .foregroundStyle(DS.Color.textPrimary)
                     .frame(width: DS.Size.tapTarget, height: DS.Size.tapTarget)
                     .background(
@@ -142,7 +142,8 @@ struct ThreadView: View {
             MessageBubble(text: text, sender: sender)
         case let .caddyCall(call):
             CaddyCallCard(
-                play: call.decision.play,
+                club: call.decision.club,
+                distanceText: call.decision.distanceText,
                 target: call.decision.target,
                 safeMiss: call.decision.safeMiss,
                 why: call.decision.why,

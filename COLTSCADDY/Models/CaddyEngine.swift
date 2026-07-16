@@ -12,6 +12,8 @@ struct CaddyDecision: Equatable {
     }
 
     let play: String
+    let club: String
+    let distanceText: String
     let target: String
     let safeMiss: String
     let why: String
@@ -95,6 +97,8 @@ private extension CaddyEngine {
 
             return CaddyDecision(
                 play: "\(club.name) to \(club.carryYards)",
+                club: club.name,
+                distanceText: distanceText(for: club.carryYards),
                 target: "Aim at the widest part of the fairway.",
                 safeMiss: safeMiss(for: trouble, fallback: "Short grass beats extra yards here."),
                 why: "Penalty trouble is marked on a tee shot, so the call is the most in-play club instead of driver.",
@@ -110,6 +114,8 @@ private extension CaddyEngine {
 
         return CaddyDecision(
             play: "\(club.name) to \(club.carryYards)",
+            club: club.name,
+            distanceText: distanceText(for: club.carryYards),
             target: "Favor the center of the landing area.",
             safeMiss: "Either side is playable; make a committed swing.",
             why: "No penalty trouble is marked, so driver is allowed.",
@@ -128,6 +134,8 @@ private extension CaddyEngine {
 
             return CaddyDecision(
                 play: "\(club.name), splash it on",
+                club: club.name,
+                distanceText: distanceText(for: input.distanceYards),
                 target: "Land it safely on the green.",
                 safeMiss: "Long is better than leaving it in the bunker.",
                 why: "Sand takes putter and bump-and-run out of the default plan.",
@@ -139,6 +147,8 @@ private extension CaddyEngine {
         if input.distanceYards <= 12 && input.lie == .fairway && trouble.isEmpty {
             return CaddyDecision(
                 play: "Putter from off the green",
+                club: "Putter",
+                distanceText: distanceText(for: input.distanceYards),
                 target: "Roll it on your start line.",
                 safeMiss: "Past the hole is fine; do not stub it short.",
                 why: "For short chips, the lowest-loft option that works is the default.",
@@ -151,6 +161,8 @@ private extension CaddyEngine {
 
         return CaddyDecision(
             play: "\(club.name) bump-and-run",
+            club: club.name,
+            distanceText: distanceText(for: input.distanceYards),
             target: "Land it early and let it roll.",
             safeMiss: "Leave the next one uphill if you miss.",
             why: "The chip rule favors low loft first. The 60-degree is not the default.",
@@ -162,6 +174,8 @@ private extension CaddyEngine {
     static func puttDecision(for input: CaddyShotInput) -> CaddyDecision {
         CaddyDecision(
             play: "Putter",
+            club: "Putter",
+            distanceText: distanceText(for: input.distanceYards),
             target: "Start it on your intended line.",
             safeMiss: "Speed first; leave a simple comeback.",
             why: "This is a putt, so the caddie commits to the putter.",
@@ -180,6 +194,8 @@ private extension CaddyEngine {
 
             return CaddyDecision(
                 play: "Advance it to \(bailout.carryYards) with \(bailout.name)",
+                club: bailout.name,
+                distanceText: distanceText(for: bailout.carryYards),
                 target: "Pick the cleanest fairway number.",
                 safeMiss: safeMiss(for: trouble, fallback: "Short and in play is the win."),
                 why: "Bad lies and marked trouble are where hero recoveries make big numbers. A full-wedge number is the win.",
@@ -192,6 +208,8 @@ private extension CaddyEngine {
 
         return CaddyDecision(
             play: "\(club.name) to \(club.carryYards)",
+            club: club.name,
+            distanceText: distanceText(for: club.carryYards),
             target: "Aim center green.",
             safeMiss: "Short side is not worth chasing; take the middle.",
             why: "Clean lie with no marked trouble, so the call is the bag number rounded toward safety.",
@@ -319,6 +337,8 @@ private extension CaddyEngine {
     static func invalidDistanceDecision() -> CaddyDecision {
         CaddyDecision(
             play: "Take the safest playable club",
+            club: "Take the safest playable club",
+            distanceText: distanceText(for: 0),
             target: "Choose the largest safe target.",
             safeMiss: "Keep it in play.",
             why: "The distance is missing or invalid, so confidence drops but the caddie still commits.",
@@ -329,5 +349,9 @@ private extension CaddyEngine {
 
     static var fallbackClub: CaddyBagClub {
         CaddyBagClub(name: "Safe club", carryYards: 0)
+    }
+
+    static func distanceText(for yards: Int) -> String {
+        "\(yards) yds"
     }
 }

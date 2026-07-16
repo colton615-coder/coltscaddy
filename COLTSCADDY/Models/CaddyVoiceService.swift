@@ -106,6 +106,8 @@ private struct CaddyVoiceRequest: Encodable {
         }
 
         let play: String
+        let club: String
+        let distanceText: String
         let target: String
         let safeMiss: String
         let why: String
@@ -126,6 +128,8 @@ private struct CaddyVoiceRequest: Encodable {
         )
         decision = Decision(
             play: input.decision.play,
+            club: input.decision.club,
+            distanceText: input.decision.distanceText,
             target: input.decision.target,
             safeMiss: input.decision.safeMiss,
             why: input.decision.why,

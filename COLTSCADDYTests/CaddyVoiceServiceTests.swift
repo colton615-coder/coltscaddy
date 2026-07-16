@@ -49,6 +49,8 @@ struct CaddyVoiceServiceTests {
             ),
             decision: CaddyDecision(
                 play: "7 Iron to 165",
+                club: "7 Iron",
+                distanceText: "165 yds",
                 target: "Aim center green.",
                 safeMiss: "Short side is not worth chasing; take the middle.",
                 why: "The clean lie allows the safe bag number.",

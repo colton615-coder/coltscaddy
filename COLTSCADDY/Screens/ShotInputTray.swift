@@ -40,7 +40,7 @@ struct ShotInputTray: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DS.Spacing.lg) {
                 Text("Build the shot")
-                    .font(DS.Font.playCall)
+                    .font(DS.Font.screenTitle)
                     .foregroundStyle(DS.Color.textPrimary)
 
                 VStack(alignment: .leading, spacing: DS.Spacing.lg) {

@@ -37,10 +37,13 @@ final class COLTSCADDYUITests: XCTestCase {
         app.buttons["Ask the caddie"].tap()
 
         XCTAssertTrue(app.staticTexts["CADDY CALL"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Target:'")).firstMatch.exists)
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Safe miss:'")).firstMatch.exists)
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Why:'")).firstMatch.exists)
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Alternate safer:'")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts["7 Iron"].exists)
+        XCTAssertTrue(app.staticTexts["165 yds"].exists)
+        XCTAssertTrue(app.staticTexts["Medium-high"].exists)
+        XCTAssertTrue(app.staticTexts["Target"].exists)
+        XCTAssertTrue(app.staticTexts["Safe miss"].exists)
+        XCTAssertTrue(app.staticTexts["Why"].exists)
+        XCTAssertTrue(app.staticTexts["Alternate"].exists)
         XCTAssertTrue(app.buttons["Remind me how"].exists)
 
         let logResultButton = app.buttons["Log result"]
@@ -53,7 +56,7 @@ final class COLTSCADDYUITests: XCTestCase {
         XCTAssertFalse(logResultButton.isEnabled)
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = "Phase B Logged Caddy Call Card"
+        attachment.name = "Phase 5.2 Logged Caddy Call Card"
         attachment.lifetime = .keepAlways
         add(attachment)
     }

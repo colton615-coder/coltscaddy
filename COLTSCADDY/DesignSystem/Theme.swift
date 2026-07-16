@@ -19,6 +19,7 @@ enum DS {
 
     enum Font {
         static let playCall = SwiftUI.Font.system(size: Size.playCall, weight: .semibold, design: .rounded)
+        static let screenTitle = SwiftUI.Font.system(size: Size.screenTitle, weight: .semibold, design: .rounded)
         static let playDistance = SwiftUI.Font.system(size: Size.playDistance, weight: .semibold, design: .rounded)
         static let fieldLabel = SwiftUI.Font.system(size: Size.fieldLabel, weight: .semibold, design: .rounded)
         static let fieldValue = SwiftUI.Font.system(size: Size.fieldValue, weight: .regular, design: .rounded)
@@ -31,6 +32,7 @@ enum DS {
 
         private enum Size {
             static let playCall: CGFloat = 44
+            static let screenTitle: CGFloat = 26
             static let playDistance: CGFloat = 26
             static let fieldLabel: CGFloat = 19
             static let fieldValue: CGFloat = 15

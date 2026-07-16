@@ -14,6 +14,8 @@ struct CaddyEngineTests {
         )
 
         #expect(decision.play.contains("3 Hybrid"))
+        #expect(decision.club == "3 Hybrid")
+        #expect(decision.distanceText == "200 yds")
         #expect(!decision.play.contains("Driver"))
         #expect(decision.safeMiss.contains("water"))
         #expect(decision.confidence == .mediumHigh)
@@ -70,6 +72,8 @@ struct CaddyEngineTests {
 
         #expect(decision.play.contains("7 Iron"))
         #expect(decision.play.contains("165"))
+        #expect(decision.club == "7 Iron")
+        #expect(decision.distanceText == "165 yds")
         #expect(decision.alternate.text.contains("8 Iron"))
     }
 

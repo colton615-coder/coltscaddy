@@ -8,6 +8,14 @@
 - Color carries meaning and is not decorative: cyan is the accent, green is
   confidence, and amber is the alternate play.
 
+## 2026-07-15 — Caddy Call card hierarchy lock
+
+- Colt chose the taller Caddy Call card hierarchy from reviewed mockups.
+- Color carries meaning and is not decorative: cyan is the number, green is
+  confidence, and amber is the alternate.
+- Post-shot conversational debrief is deferred to v2+/v3 rather than built in
+  this v1 card-polish loop.
+
 ## 2026-07-11
 
 - Project name kept as COLTSCADDY (all caps, no space); display name Colt's Caddy.

@@ -2,8 +2,7 @@
 
 ## SINGLE NEXT ACTION
 
-Phase 5.2: Polish the Caddy Call card layout hierarchy using the locked Range
-Finder design tokens.
+Phase 5.3: Stop the caddie bubble from repeating the Caddy Call card.
 
 ---
 
@@ -35,8 +34,9 @@ Finder color and typography direction.
 
 ## Phase 5 — Visual lock + polish 👉 YOU ARE HERE
 1. **5.1 — Lock Range Finder tokens in Theme.swift.** ✅ DONE
-2. **5.2 — Polish the Caddy Call card layout hierarchy.** 👉 SINGLE NEXT ACTION
-3. Polish spacing and motion.
+2. **5.2 — Polish the Caddy Call card layout hierarchy.** ✅ DONE
+3. **5.3 — Stop the caddie bubble from repeating the Caddy Call card.** 👉 SINGLE NEXT ACTION
+4. Polish spacing and motion.
 
 ## Phase 6 — v2 and beyond (do NOT start any of this)
 - Activate tendency learning behavior (lifecycle already modeled)
@@ -44,6 +44,13 @@ Finder color and typography direction.
 - Colt's own shot logging as a data source
 - Trackman import for real carry distances
 - Aim View, then Green Map
+- **Conversational shot debrief** — Colt types what happened after a shot
+  (ball flight, swing feel, cues) and the caddie retains it for later shots.
+  Requires shot logging as a data source (v3), the coaching layer (v2+), and
+  active tendency learning (v2). Explicitly out of v1.
+- **Input bar nuance typing** — `ChatInputBar` is currently a non-functional
+  placeholder; `CaddyShotInput.nuance` exists and is unreachable from the UI.
+  In-scope for v1 per PROJECT.md, but it is its own loop after Phase 5.
 - Maybe: course data via free APIs, hole visuals
 
 ## Rules of the road

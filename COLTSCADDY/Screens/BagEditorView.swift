@@ -8,7 +8,7 @@ struct BagEditorView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.lg) {
             Text("Your bag")
-                .font(DS.Font.playCall)
+                .font(DS.Font.screenTitle)
                 .foregroundStyle(DS.Color.textPrimary)
 
             Text("Carry yards for each club. The caddie picks from these numbers.")

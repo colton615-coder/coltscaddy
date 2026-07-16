@@ -6,7 +6,8 @@ struct CaddyCallCard: View {
         let text: String
     }
 
-    let play: String
+    let club: String
+    let distanceText: String
     let target: String
     let safeMiss: String
     let why: String
@@ -17,7 +18,8 @@ struct CaddyCallCard: View {
     let logAction: () -> Void
 
     init(
-        play: String,
+        club: String,
+        distanceText: String,
         target: String,
         safeMiss: String,
         why: String,
@@ -27,7 +29,8 @@ struct CaddyCallCard: View {
         remindAction: @escaping () -> Void = {},
         logAction: @escaping () -> Void = {}
     ) {
-        self.play = play
+        self.club = club
+        self.distanceText = distanceText
         self.target = target
         self.safeMiss = safeMiss
         self.why = why
@@ -41,31 +44,41 @@ struct CaddyCallCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.lg) {
             VStack(alignment: .leading, spacing: DS.Spacing.sm) {
-                Text("CADDY CALL")
-                    .font(DS.Font.caption)
-                    .tracking(DS.Font.captionTracking)
-                    .foregroundStyle(DS.Color.accent)
+                HStack(alignment: .center) {
+                    Text("CADDY CALL")
+                        .font(DS.Font.caption)
+                        .tracking(DS.Font.captionTracking)
+                        .foregroundStyle(DS.Color.accent)
 
-                Text(play)
+                    Spacer(minLength: DS.Spacing.md)
+
+                    ConfidenceBadge(text: confidence)
+                }
+
+                Text(club)
                     .font(DS.Font.playCall)
                     .foregroundStyle(DS.Color.textPrimary)
                     .monospacedDigit()
+
+                Text(distanceText)
+                    .font(DS.Font.playDistance)
+                    .foregroundStyle(DS.Color.accent)
+                    .monospacedDigit()
             }
 
-            VStack(alignment: .leading, spacing: DS.Spacing.sm) {
-                FieldLine(name: "Target", value: target)
-                FieldLine(name: "Safe miss", value: safeMiss)
-                FieldLine(name: "Why", value: why)
+            VStack(alignment: .leading, spacing: DS.Spacing.md) {
+                FieldBlock(label: "Target", value: target)
+                FieldBlock(label: "Safe miss", value: safeMiss)
+                FieldBlock(label: "Why", value: why)
 
                 if let alternate {
-                    FieldLine(name: "Alternate \(alternate.type)", value: alternate.text)
+                    Rectangle()
+                        .fill(DS.Color.hairline)
+                        .frame(height: 1)
+
+                    FieldBlock(label: "Alternate", value: alternate.text, labelColor: DS.Color.alternate)
                 }
             }
-
-            Text(confidence.uppercased())
-                .font(DS.Font.caption)
-                .tracking(DS.Font.captionTracking)
-                .foregroundStyle(DS.Color.textSecondary)
 
             HStack(spacing: DS.Spacing.sm) {
                 quietButton("Remind me how", action: remindAction)
@@ -98,30 +111,45 @@ struct CaddyCallCard: View {
     }
 }
 
-private struct FieldLine: View {
-    let name: String
-    let value: String
+private struct ConfidenceBadge: View {
+    let text: String
 
     var body: some View {
-        Text(line)
-            .font(DS.Font.label)
-            .monospacedDigit()
+        Text(text)
+            .font(DS.Font.badge)
+            .foregroundStyle(DS.Color.confidence)
+            .padding(.horizontal, DS.Spacing.sm)
+            .padding(.vertical, DS.Spacing.xs)
+            .background(
+                RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
+                    .fill(DS.Color.confidenceFill)
+            )
     }
+}
 
-    private var line: AttributedString {
-        var fieldName = AttributedString(name + ": ")
-        fieldName.foregroundColor = DS.Color.textPrimary
+private struct FieldBlock: View {
+    let label: String
+    let value: String
+    var labelColor = DS.Color.textPrimary
 
-        var fieldValue = AttributedString(value)
-        fieldValue.foregroundColor = DS.Color.textSecondary
+    var body: some View {
+        VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+            Text(label)
+                .font(DS.Font.fieldLabel)
+                .foregroundStyle(labelColor)
 
-        return fieldName + fieldValue
+            Text(value)
+                .font(DS.Font.fieldValue)
+                .foregroundStyle(DS.Color.textSecondary)
+                .monospacedDigit()
+        }
     }
 }
 
 #Preview {
     CaddyCallCard(
-        play: "165 yds · 7-iron controlled draw",
+        club: "7 Iron",
+        distanceText: "165 yds",
         target: "Start it at the right-center of the green.",
         safeMiss: "Short left leaves the easiest up-and-down.",
         why: "The fairway lie gives you enough control to favor the center and avoid the long-right bunker.",
