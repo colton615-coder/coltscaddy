@@ -13,14 +13,17 @@
 CaddyEngine owns ALL decision logic. It is deterministic, rule-ordered, and
 testable without a network connection. The LLM never chooses the club, the
 target, the safe miss, or the confidence. The LLM receives the engine's
-structured decision and renders it in the caddie's voice. If the network is
-down, the app still produces a correct (if flatly worded) Caddy Call.
+structured decision and engine-owned `lead`, then may re-voice that lead in the
+caddie's personality. If the network is down, the app still produces the
+engine's complete one-sentence lead and the correct structured Caddy Call.
 
 The iOS app never imports an AI-provider SDK and never stores a provider API
 key. It posts the shot context and completed CaddyDecision to the configured
 `CADDY_VOICE_ENDPOINT`; provider selection and credentials live behind that
-backend boundary. The backend returns `{ "assistantText": "..." }` and is not
-allowed to alter the structured decision.
+backend boundary. The backend returns `{ "assistantText": "..." }`, where
+`assistantText` is ONE short sentence in the caddie's voice. It may re-voice
+the lead with personality, but it may not restate the card fields or alter the
+structured decision.
 
 ## Target Folder Structure
 

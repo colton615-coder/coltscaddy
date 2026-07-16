@@ -11,6 +11,7 @@ struct CaddyDecision: Equatable {
         let text: String
     }
 
+    let lead: String
     let play: String
     let club: String
     let distanceText: String
@@ -96,6 +97,7 @@ private extension CaddyEngine {
             let alternate = longestNonDriver(from: bag) ?? club
 
             return CaddyDecision(
+                lead: "Driver stays in the bag here.",
                 play: "\(club.name) to \(club.carryYards)",
                 club: club.name,
                 distanceText: distanceText(for: club.carryYards),
@@ -113,6 +115,7 @@ private extension CaddyEngine {
         let club = driver(from: bag) ?? longestClub(from: bag)
 
         return CaddyDecision(
+            lead: "Driver gets the green light.",
             play: "\(club.name) to \(club.carryYards)",
             club: club.name,
             distanceText: distanceText(for: club.carryYards),
@@ -133,6 +136,7 @@ private extension CaddyEngine {
             let club = namedClub(containing: "Sand Wedge", in: bag) ?? highestLoftWedge(from: bag)
 
             return CaddyDecision(
+                lead: "Get it out cleanly and move on.",
                 play: "\(club.name), splash it on",
                 club: club.name,
                 distanceText: distanceText(for: input.distanceYards),
@@ -146,6 +150,7 @@ private extension CaddyEngine {
 
         if input.distanceYards <= 12 && input.lie == .fairway && trouble.isEmpty {
             return CaddyDecision(
+                lead: "The putter is the smart, boring play.",
                 play: "Putter from off the green",
                 club: "Putter",
                 distanceText: distanceText(for: input.distanceYards),
@@ -160,6 +165,7 @@ private extension CaddyEngine {
         let club = bumpAndRunClub(from: bag)
 
         return CaddyDecision(
+            lead: "Keep this one low and predictable.",
             play: "\(club.name) bump-and-run",
             club: club.name,
             distanceText: distanceText(for: input.distanceYards),
@@ -173,6 +179,7 @@ private extension CaddyEngine {
 
     static func puttDecision(for input: CaddyShotInput) -> CaddyDecision {
         CaddyDecision(
+            lead: "Match the speed and trust it.",
             play: "Putter",
             club: "Putter",
             distanceText: distanceText(for: input.distanceYards),
@@ -193,6 +200,7 @@ private extension CaddyEngine {
             let bailout = wedgeBailoutClub(from: bag)
 
             return CaddyDecision(
+                lead: "Advance it to a number instead of playing hero.",
                 play: "Advance it to \(bailout.carryYards) with \(bailout.name)",
                 club: bailout.name,
                 distanceText: distanceText(for: bailout.carryYards),
@@ -207,6 +215,7 @@ private extension CaddyEngine {
         let club = fullSwingClub(for: input.distanceYards, from: bag, avoidLong: trouble.contains(.bunker))
 
         return CaddyDecision(
+            lead: "This is a stock club for you.",
             play: "\(club.name) to \(club.carryYards)",
             club: club.name,
             distanceText: distanceText(for: club.carryYards),
@@ -336,6 +345,7 @@ private extension CaddyEngine {
 
     static func invalidDistanceDecision() -> CaddyDecision {
         CaddyDecision(
+            lead: "The number is missing, but the safe call still stands.",
             play: "Take the safest playable club",
             club: "Take the safest playable club",
             distanceText: distanceText(for: 0),

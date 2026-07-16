@@ -88,6 +88,55 @@ struct CaddyEngineTests {
         #expect(!decision.alternate.text.isEmpty)
     }
 
+    @Test func everyDecisionBranchProducesItsSpecificShortLead() {
+        let cases: [(input: CaddyShotInput, expectedLead: String)] = [
+            (
+                CaddyShotInput(shotType: .tee, lie: .tee, trouble: [.water], distanceYards: 420),
+                "Driver stays in the bag here."
+            ),
+            (
+                CaddyShotInput(shotType: .tee, lie: .tee, trouble: [.none], distanceYards: 420),
+                "Driver gets the green light."
+            ),
+            (
+                CaddyShotInput(shotType: .chip, lie: .sand, trouble: [.none], distanceYards: 18),
+                "Get it out cleanly and move on."
+            ),
+            (
+                CaddyShotInput(shotType: .chip, lie: .fairway, trouble: [.none], distanceYards: 8),
+                "The putter is the smart, boring play."
+            ),
+            (
+                CaddyShotInput(shotType: .chip, lie: .rough, trouble: [.none], distanceYards: 22),
+                "Keep this one low and predictable."
+            ),
+            (
+                CaddyShotInput(shotType: .putt, lie: .fairway, trouble: [.none], distanceYards: 20),
+                "Match the speed and trust it."
+            ),
+            (
+                CaddyShotInput(shotType: .full, lie: .rough, trouble: [.trees], distanceYards: 175),
+                "Advance it to a number instead of playing hero."
+            ),
+            (
+                CaddyShotInput(shotType: .full, lie: .fairway, trouble: [.none], distanceYards: 160),
+                "This is a stock club for you."
+            ),
+            (
+                CaddyShotInput(shotType: .full, lie: .fairway, trouble: [.none], distanceYards: 0),
+                "The number is missing, but the safe call still stands."
+            )
+        ]
+
+        for testCase in cases {
+            let decision = CaddyEngine.recommend(for: testCase.input, bag: testBag)
+
+            #expect(decision.lead == testCase.expectedLead)
+            #expect(decision.lead.split(separator: " ").count <= 12)
+            #expect(".!?".contains(decision.lead.last ?? " "))
+        }
+    }
+
     private var testBag: [CaddyBagClub] {
         ProfileSeeder.defaultBag.map {
             CaddyBagClub(name: $0.name, carryYards: $0.carryYards)

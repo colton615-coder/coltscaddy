@@ -36,6 +36,7 @@ final class COLTSCADDYUITests: XCTestCase {
 
         app.buttons["Ask the caddie"].tap()
 
+        XCTAssertTrue(app.staticTexts["This is a stock club for you."].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["CADDY CALL"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["7 Iron"].exists)
         XCTAssertTrue(app.staticTexts["165 yds"].exists)
@@ -56,7 +57,7 @@ final class COLTSCADDYUITests: XCTestCase {
         XCTAssertFalse(logResultButton.isEnabled)
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = "Phase 5.2 Logged Caddy Call Card"
+        attachment.name = "Phase 5.3 Short Caddie Lead"
         attachment.lifetime = .keepAlways
         add(attachment)
     }

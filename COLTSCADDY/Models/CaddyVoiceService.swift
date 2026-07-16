@@ -2,6 +2,9 @@
 //  CaddyVoiceService.swift
 //  COLTSCADDY
 //
+//  Voice contract: the backend returns assistantText containing ONE short
+//  sentence in the caddie's voice. It may re-voice the engine-owned lead with
+//  personality, but it may not restate the card fields or alter the decision.
 
 import Foundation
 
@@ -90,7 +93,7 @@ private enum CaddyVoiceError: Error {
     case invalidResponse
 }
 
-private struct CaddyVoiceRequest: Encodable {
+struct CaddyVoiceRequest: Encodable {
     struct Shot: Encodable {
         let shotType: String
         let lie: String
@@ -105,6 +108,7 @@ private struct CaddyVoiceRequest: Encodable {
             let text: String
         }
 
+        let lead: String
         let play: String
         let club: String
         let distanceText: String
@@ -127,6 +131,7 @@ private struct CaddyVoiceRequest: Encodable {
             nuance: input.shot.nuance
         )
         decision = Decision(
+            lead: input.decision.lead,
             play: input.decision.play,
             club: input.decision.club,
             distanceText: input.decision.distanceText,
@@ -148,26 +153,6 @@ private struct CaddyVoiceResponse: Decodable {
 
 private enum LocalCaddyVoiceRenderer {
     static func render(_ input: CaddyVoiceInput) -> String {
-        let decision = input.decision
-
-        return [
-            sentence(decision.play),
-            sentence(decision.target),
-            sentence(decision.safeMiss),
-            sentence(decision.why),
-            "Confidence is \(confidenceLabel(decision.confidence)).",
-            sentence("The \(decision.alternate.type) alternate is \(decision.alternate.text)")
-        ]
-        .joined(separator: " ")
-    }
-
-    private static func sentence(_ text: String) -> String {
-        guard let lastCharacter = text.last else { return text }
-        guard !".!?".contains(lastCharacter) else { return text }
-        return text + "."
-    }
-
-    private static func confidenceLabel(_ confidence: ConfidenceBand) -> String {
-        confidence == .mediumHigh ? "medium-high" : confidence.rawValue
+        input.decision.lead
     }
 }

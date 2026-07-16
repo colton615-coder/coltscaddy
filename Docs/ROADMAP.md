@@ -2,7 +2,9 @@
 
 ## SINGLE NEXT ACTION
 
-Phase 5.3: Stop the caddie bubble from repeating the Caddy Call card.
+Fix the input bar bug: `ChatInputBar` is a non-functional placeholder, while
+`CaddyShotInput.nuance` exists but is unreachable from the UI. Optional typed
+nuance is in v1 scope per PROJECT.md.
 
 ---
 
@@ -32,11 +34,16 @@ Finder color and typography direction.
 7. Provider-neutral voice layer: engine decision in, caddie-voiced copy out,
    with offline flat-wording fallback. ✅ DONE (backend implementation pending)
 
-## Phase 5 — Visual lock + polish 👉 YOU ARE HERE
+## Phase 5 — Visual lock + polish
+The feature work is complete; final spacing and motion polish remains.
+
 1. **5.1 — Lock Range Finder tokens in Theme.swift.** ✅ DONE
 2. **5.2 — Polish the Caddy Call card layout hierarchy.** ✅ DONE
-3. **5.3 — Stop the caddie bubble from repeating the Caddy Call card.** 👉 SINGLE NEXT ACTION
-4. Polish spacing and motion.
+3. **5.3 — Stop the caddie bubble from repeating the Caddy Call card.** ✅ DONE
+4. Final spacing and motion polish remains.
+   - BUG: The golfer/bag button is an `.overlay(alignment: .topTrailing)` on
+     `ThreadView`, so long message bubbles scroll underneath it. Reserve space
+     or use a safe-area inset. Not part of Phase 5.3.
 
 ## Phase 6 — v2 and beyond (do NOT start any of this)
 - Activate tendency learning behavior (lifecycle already modeled)
@@ -48,9 +55,6 @@ Finder color and typography direction.
   (ball flight, swing feel, cues) and the caddie retains it for later shots.
   Requires shot logging as a data source (v3), the coaching layer (v2+), and
   active tendency learning (v2). Explicitly out of v1.
-- **Input bar nuance typing** — `ChatInputBar` is currently a non-functional
-  placeholder; `CaddyShotInput.nuance` exists and is unreachable from the UI.
-  In-scope for v1 per PROJECT.md, but it is its own loop after Phase 5.
 - Maybe: course data via free APIs, hole visuals
 
 ## Rules of the road

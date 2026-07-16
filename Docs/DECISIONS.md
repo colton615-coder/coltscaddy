@@ -1,5 +1,16 @@
 # Decisions
 
+## 2026-07-15 — Caddie lead owns the spoken bubble
+
+- Colt decided from screenshots that the caddie bubble must stop repeating the
+  Caddy Call card.
+- CaddyEngine owns one short, complete `lead` sentence for every decision. The
+  bubble shows that lead; the card carries the structured facts.
+- The offline renderer returns the engine-owned lead, so a missing backend
+  still produces a real sentence instead of duplicating the card.
+- The backend may re-voice the lead with personality, but it may not restate
+  card fields or alter the engine's decision.
+
 ## 2026-07-15 — Range Finder visual lock
 
 - Colt chose the Range Finder direction from reviewed mockups.

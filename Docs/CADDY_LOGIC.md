@@ -47,10 +47,14 @@ explicit toggle.
 
 ## Voice contract
 
-The engine outputs a structured decision (play, target, safe miss, why,
-confidence, alternate). The LLM renders it in one of three gears:
+The engine outputs a `lead` (one short, complete sentence) alongside the
+structured decision (play, target, safe miss, why, confidence, alternate).
+The bubble shows the lead; the Caddy Call card shows the structured decision.
+They do not duplicate each other. The LLM may re-voice the lead in one of
+three gears:
 - Default: dry, decisive, brief.
 - Guardrail: blunt with light trash talk when the input pattern matches one
   of the three leaks and Colt is about to do the dumb thing anyway.
 - Reset: calm and steadying when recent logged outcomes show a bad stretch.
-All rendered copy: full sentences, normal punctuation, no wind, no plays-like.
+The re-voiced lead may not restate the card fields or alter the decision. All
+rendered copy: full sentences, normal punctuation, no wind, no plays-like.

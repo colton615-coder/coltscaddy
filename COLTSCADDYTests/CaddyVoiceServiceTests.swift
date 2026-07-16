@@ -3,6 +3,7 @@
 //  COLTSCADDYTests
 //
 
+import Foundation
 import Testing
 @testable import COLTSCADDY
 
@@ -24,10 +25,7 @@ struct CaddyVoiceServiceTests {
 
         let response = await service.response(for: testInput)
 
-        #expect(response.contains("7 Iron to 165."))
-        #expect(response.contains("Aim center green."))
-        #expect(response.contains("Confidence is medium-high."))
-        #expect(response.contains("The safer alternate is 8 Iron to the front number."))
+        #expect(response == "This is a stock club for you.")
     }
 
     @Test func usesLocalDecisionWhenBackendIsNotConfigured() async {
@@ -35,8 +33,15 @@ struct CaddyVoiceServiceTests {
 
         let response = await service.response(for: testInput)
 
-        #expect(response.contains("7 Iron to 165."))
-        #expect(response.contains("Short side is not worth chasing"))
+        #expect(response == "This is a stock club for you.")
+    }
+
+    @Test func backendPayloadIncludesEngineLead() throws {
+        let data = try JSONEncoder().encode(CaddyVoiceRequest(input: testInput))
+        let object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let decision = try #require(object["decision"] as? [String: Any])
+
+        #expect(decision["lead"] as? String == "This is a stock club for you.")
     }
 
     private var testInput: CaddyVoiceInput {
@@ -48,6 +53,7 @@ struct CaddyVoiceServiceTests {
                 distanceYards: 160
             ),
             decision: CaddyDecision(
+                lead: "This is a stock club for you.",
                 play: "7 Iron to 165",
                 club: "7 Iron",
                 distanceText: "165 yds",
