@@ -29,7 +29,7 @@ final class COLTSCADDYUITests: XCTestCase {
 
         app.buttons["+"].tap()
 
-        let distanceField = app.textFields.firstMatch
+        let distanceField = app.textFields["shotDistanceField"]
         XCTAssertTrue(distanceField.waitForExistence(timeout: 2))
         distanceField.tap()
         distanceField.typeText("165")
@@ -91,6 +91,48 @@ final class COLTSCADDYUITests: XCTestCase {
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "ChatInputBar Nuance Path"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
+    func testBagButtonNeverObscuresTopMessageInLongThread() throws {
+        let app = XCUIApplication()
+        app.launchArguments.append("-UITestLongThread")
+        app.launch()
+
+        let conversationFeed = app.scrollViews["conversationFeed"]
+        XCTAssertTrue(conversationFeed.waitForExistence(timeout: 2))
+
+        for _ in 0..<4 {
+            conversationFeed.swipeDown()
+        }
+
+        let topmostMessage = app.otherElements["topmostThreadMessage"]
+        let bagButton = app.buttons["bagButton"]
+        XCTAssertTrue(topmostMessage.waitForExistence(timeout: 2))
+        XCTAssertTrue(bagButton.waitForExistence(timeout: 2))
+        XCTAssertFalse(
+            topmostMessage.frame.intersects(bagButton.frame),
+            "The bag button must not overlap the topmost message at the top of a long thread."
+        )
+        XCTAssertGreaterThanOrEqual(
+            topmostMessage.frame.minY,
+            bagButton.frame.maxY,
+            "The topmost message must begin below the full height reserved for the bag button."
+        )
+
+        let threadAttachment = XCTAttachment(screenshot: app.screenshot())
+        threadAttachment.name = "Long Thread Clear of Bag Button"
+        threadAttachment.lifetime = .keepAlways
+        add(threadAttachment)
+
+        XCTAssertTrue(bagButton.isHittable)
+        bagButton.tap()
+        XCTAssertTrue(app.staticTexts["Your bag"].waitForExistence(timeout: 2))
+
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "Long Thread Bag Button Layout"
         attachment.lifetime = .keepAlways
         add(attachment)
     }

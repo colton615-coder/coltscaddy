@@ -4,14 +4,7 @@ import SwiftData
 struct ThreadView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var profiles: [PlayerProfile]
-    @State private var messages: [ThreadMessage] = [
-        ThreadMessage(
-            content: .text(
-                "Good to see you, Colt. Tell me what you're facing and I'll give you the smart play.",
-                sender: .them
-            )
-        )
-    ]
+    @State private var messages: [ThreadMessage]
     @State private var isShotInputPresented = false
     @State private var isBagEditorPresented = false
     @State private var isAwaitingCaddyResponse = false
@@ -21,6 +14,31 @@ struct ThreadView: View {
 
     init(voiceService: CaddyVoiceService = .live) {
         self.voiceService = voiceService
+        _messages = State(initialValue: Self.initialMessages)
+    }
+
+    private static var initialMessages: [ThreadMessage] {
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-UITestLongThread") {
+            return (1...8).map { index in
+                ThreadMessage(
+                    content: .text(
+                        "Long thread message \(index) confirms that every bubble remains fully visible while the conversation scrolls.",
+                        sender: index.isMultiple(of: 2) ? .them : .me
+                    )
+                )
+            }
+        }
+#endif
+
+        return [
+            ThreadMessage(
+                content: .text(
+                    "Good to see you, Colt. Tell me what you're facing and I'll give you the smart play.",
+                    sender: .them
+                )
+            )
+        ]
     }
 
     var body: some View {
@@ -31,7 +49,7 @@ struct ThreadView: View {
         .padding(.horizontal, DS.Spacing.xl)
         .padding(.bottom, DS.Spacing.md)
         .background(DS.Color.bg.ignoresSafeArea())
-        .overlay(alignment: .topTrailing) {
+        .safeAreaInset(edge: .top, alignment: .trailing, spacing: 0) {
             bagButton
                 .padding(.trailing, DS.Spacing.xl)
                 .padding(.top, DS.Spacing.sm)
@@ -66,6 +84,7 @@ struct ThreadView: View {
                 )
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("bagButton")
     }
 
     private var conversationFeed: some View {
@@ -75,12 +94,19 @@ struct ThreadView: View {
                     ForEach(messages) { message in
                         threadItem(for: message)
                             .id(message.id)
+                            .accessibilityElement(children: .contain)
+                            .accessibilityIdentifier(
+                                message.id == messages.first?.id
+                                    ? "topmostThreadMessage"
+                                    : "threadMessage"
+                            )
                     }
                 }
                 .padding(.top, DS.Spacing.xxl)
                 .padding(.bottom, DS.Spacing.lg)
             }
             .scrollIndicators(.hidden)
+            .accessibilityIdentifier("conversationFeed")
             .onAppear {
                 scrollToLatest(using: proxy)
             }

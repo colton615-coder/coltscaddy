@@ -2,8 +2,8 @@
 
 ## SINGLE NEXT ACTION
 
-Phase 5 item 4: fix the golfer/bag button overlay so long message bubbles do
-not scroll underneath it. This is the first final spacing-polish task.
+Phase 5 item 5: complete the remaining spacing and motion polish in a separate
+loop, beginning with a screen-by-screen visual audit before changing code.
 
 ---
 
@@ -46,10 +46,10 @@ The feature work is complete; final spacing and motion polish remains.
 1. **5.1 — Lock Range Finder tokens in Theme.swift.** ✅ DONE
 2. **5.2 — Polish the Caddy Call card layout hierarchy.** ✅ DONE
 3. **5.3 — Stop the caddie bubble from repeating the Caddy Call card.** ✅ DONE
-4. Final spacing and motion polish remains.
-   - BUG: The golfer/bag button is an `.overlay(alignment: .topTrailing)` on
-     `ThreadView`, so long message bubbles scroll underneath it. Reserve space
-     or use a safe-area inset. Not part of Phase 5.3.
+4. **Keep the golfer/bag button clear of thread content.** ✅ DONE
+   - `ThreadView` now uses a top-trailing safe-area inset that reserves real
+     layout space while keeping the existing button appearance and route.
+5. Final spacing and motion polish remains.
 
 ## Phase 6 — v2 and beyond (do NOT start any of this)
 - Activate tendency learning behavior (lifecycle already modeled)

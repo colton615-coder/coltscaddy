@@ -1,5 +1,47 @@
 # Decisions
 
+## 2026-07-15 — Golfer/bag button reserves thread space
+
+### Decisions locked
+
+- The golfer/bag button uses a top-trailing `safeAreaInset` instead of a root
+  overlay. The inset reserves the button's full vertical band, so thread items
+  cannot occupy the same top region at any scroll position.
+- The button's symbol, design-system styling, 44-point size, top-trailing
+  position, and `BagEditorView` route are unchanged.
+- A DEBUG-only long-thread launch fixture exists solely for deterministic UI
+  geometry proof. It does not change normal launches or release behavior.
+
+### Implemented and proved
+
+- The regression test first failed against the overlay: the top message began
+  at -9.33 points while the button extended to 114.5 points.
+- After the safe-area inset change, the same test scrolled a long thread to the
+  top, proved the first message starts below the button's reserved height,
+  proved their frames do not intersect, tapped the button, and opened
+  `BagEditorView`.
+- The existing structured-card UI flow also passed after proving the newest
+  `CaddyCallCard` remained visible and its `Log result` action was hittable.
+- A generic iOS Simulator build succeeded. The complete COLTSCADDYTests target
+  passed on iOS 26.5 `26.5 sim2`: 20 tests passed with zero failures or skips.
+- The two focused UI flows passed with zero failures. The retained simulator
+  screenshot is `Proof/bag-button-safe-area-inset.png`.
+
+### Tried, warning, and recovery path
+
+- The first test draft tried to count historical `CADDY CALL` labels, but
+  `LazyVStack` exposes only rendered items to UI automation. The recovery was a
+  deterministic long-thread fixture and direct top-message geometry checks.
+- The structured-card test still selected the first text field, which became
+  stale after ChatInputBar gained a real field. It now selects the existing
+  `shotDistanceField` identifier.
+- Xcode again emitted its `DebuggerVersionStore` / `no debugger version`
+  warning. Both final UI tests continued and returned `TEST SUCCEEDED`.
+- If this layout regresses, rerun
+  `testBagButtonNeverObscuresTopMessageInLongThread` first. A failure of the
+  vertical frame assertion means the top inset no longer reserves enough
+  space; a failure after the tap means the bag-editor route regressed.
+
 ## 2026-07-15 — ChatInputBar nuance path
 
 ### Decisions locked
