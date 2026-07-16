@@ -36,11 +36,13 @@ struct CaddyVoiceServiceTests {
         #expect(response == "This is a stock club for you.")
     }
 
-    @Test func backendPayloadIncludesEngineLead() throws {
+    @Test func backendPayloadIncludesEngineLeadAndShotNuance() throws {
         let data = try JSONEncoder().encode(CaddyVoiceRequest(input: testInput))
         let object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let shot = try #require(object["shot"] as? [String: Any])
         let decision = try #require(object["decision"] as? [String: Any])
 
+        #expect(shot["nuance"] as? String == "Ball below my feet.")
         #expect(decision["lead"] as? String == "This is a stock club for you.")
     }
 
@@ -50,7 +52,8 @@ struct CaddyVoiceServiceTests {
                 shotType: .full,
                 lie: .fairway,
                 trouble: [],
-                distanceYards: 160
+                distanceYards: 160,
+                nuance: "Ball below my feet."
             ),
             decision: CaddyDecision(
                 lead: "This is a stock club for you.",

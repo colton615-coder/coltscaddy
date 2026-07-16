@@ -15,6 +15,7 @@ struct ThreadView: View {
     @State private var isShotInputPresented = false
     @State private var isBagEditorPresented = false
     @State private var isAwaitingCaddyResponse = false
+    @State private var nuanceText = ""
 
     private let voiceService: CaddyVoiceService
 
@@ -110,11 +111,19 @@ struct ThreadView: View {
             .buttonStyle(.plain)
             .disabled(isAwaitingCaddyResponse)
 
-            ChatInputBar()
+            ChatInputBar(
+                text: $nuanceText,
+                isEnabled: !isAwaitingCaddyResponse
+            ) {
+                isShotInputPresented = true
+            }
         }
     }
 
     private func addShot(_ submission: ShotSubmission) {
+        let submission = submission.attachingNuance(nuanceText)
+        nuanceText = ""
+
         messages.append(ThreadMessage(content: .text(submission.summary, sender: .me)))
         isAwaitingCaddyResponse = true
 

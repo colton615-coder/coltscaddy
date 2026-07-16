@@ -63,6 +63,39 @@ final class COLTSCADDYUITests: XCTestCase {
     }
 
     @MainActor
+    func testTypedNuanceAttachesToTheNextSubmittedShotAndClears() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        let nuanceField = app.textFields["nuanceTextField"]
+        let nuanceButton = app.buttons["nuanceSendButton"]
+        XCTAssertTrue(nuanceField.waitForExistence(timeout: 2))
+        XCTAssertFalse(nuanceButton.isEnabled)
+
+        nuanceField.tap()
+        nuanceField.typeText("Ball below my feet.")
+        XCTAssertTrue(nuanceButton.isEnabled)
+        nuanceButton.tap()
+
+        let distanceField = app.textFields["shotDistanceField"]
+        XCTAssertTrue(distanceField.waitForExistence(timeout: 2))
+        distanceField.tap()
+        distanceField.typeText("165")
+        app.buttons["Ask the caddie"].tap()
+
+        XCTAssertTrue(
+            app.staticTexts["165 yards, fairway, full shot, no trouble marked. Nuance: Ball below my feet."]
+                .waitForExistence(timeout: 5)
+        )
+        XCTAssertEqual(nuanceField.value as? String, "Tell the caddie…")
+
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "ChatInputBar Nuance Path"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
     func testLaunchPerformance() throws {
         // This measures how long it takes to launch your application.
         measure(metrics: [XCTApplicationLaunchMetric()]) {

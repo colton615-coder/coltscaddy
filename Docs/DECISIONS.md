@@ -1,5 +1,47 @@
 # Decisions
 
+## 2026-07-15 — ChatInputBar nuance path
+
+### Decisions locked
+
+- Model (a) is the v1 interaction: Colt types optional nuance before opening
+  the shot tray, and that text attaches to the next submitted shot.
+- The arrow opens the shot tray only when the bar contains meaningful text.
+  The existing plus button still opens the tray when no nuance is needed.
+- Submitted nuance is trimmed; empty or whitespace-only input becomes `nil`.
+  The draft clears only after the shot is submitted.
+- The user's message bubble includes the same nuance carried by
+  `CaddyShotInput`. CaddyEngine remains deterministic and does not use nuance
+  to change its decision.
+- Model (b), a conversational free-text follow-up turn, remains out of this
+  loop because it is a larger feature.
+
+### Implemented and proved
+
+- Replaced the placeholder text with a real caller-owned `TextField` and
+  removed the no-op send-action default.
+- Added focused tests for trimmed nuance and whitespace-to-`nil` behavior.
+- Extended the backend-payload test to prove the submitted nuance is encoded
+  in `CaddyVoiceRequest.Shot.nuance`.
+- A generic iOS Simulator build succeeded.
+- The complete COLTSCADDYTests target passed on iOS 26.5 `26.5 sim2`: 20
+  tests passed with zero failures or skips.
+- A focused simulator UI test typed nuance, opened the tray from the arrow,
+  submitted a 165-yard shot, confirmed the same nuance in the user's bubble,
+  and confirmed the bar cleared. It passed in 12.211 seconds.
+- Replaced `ARCHITECT_HANDOFF.md` with the supplied current handoff and removed
+  the spent `TEMP_DAY_PLAN_2026-07-15.md` and `CODEX_PROMPT_PHASE_A.md` work
+  orders.
+
+### Tried, warning, and recovery path
+
+- The focused UI run emitted Xcode's `DebuggerVersionStore` / `no debugger
+  version` warning. The test continued and returned `TEST SUCCEEDED`; the
+  xcresult reports one passed test and zero failures.
+- If the nuance UI flow fails later, rerun the focused UI test first. Check
+  `nuanceTextField`, `nuanceSendButton`, and `shotDistanceField` before
+  changing production behavior.
+
 ## 2026-07-15 — Caddie lead owns the spoken bubble
 
 - Colt decided from screenshots that the caddie bubble must stop repeating the
@@ -158,13 +200,14 @@ repo's written record in line with decisions already made)
 
 - No physical-device run was performed.
 - Phase 4 item 6 was not started; neither card action writes persistence yet.
-- The phase was committed locally, but it was not pushed because this checkout
-  has no configured Git remote or push destination.
+- At this checkpoint the phase was reported as local-only because the checkout
+  was believed to have no remote. **SUPERSEDED:** `origin/main` is configured,
+  and the phase was pushed later.
 
 ### Recovery path
 
-- Configure the intended repository remote, then push the `main` branch. Do not
-  call the phase shipped until that push succeeds.
+- **SUPERSEDED:** no remote recovery is required. Verify shipping against
+  `origin/main` and `git ls-remote origin refs/heads/main`.
 
 ## 2026-07-15 — Phase 4 ShotHistory logging checkpoint
 
@@ -204,8 +247,9 @@ repo's written record in line with decisions already made)
 ### Not proved
 
 - No physical-device run was performed.
-- This phase cannot be pushed because the checkout has no configured Git
-  remote. It is not shipped until a future push succeeds.
+- At this checkpoint the phase was reported as unable to push because the
+  checkout was believed to have no remote. **SUPERSEDED:** `origin/main` is
+  configured, and the phase was pushed later.
 
 ### Runner warning and recovery path
 

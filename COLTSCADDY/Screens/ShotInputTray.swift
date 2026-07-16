@@ -95,6 +95,7 @@ struct ShotInputTray: View {
                 EmptyView()
             }
             .keyboardType(.numberPad)
+            .accessibilityIdentifier("shotDistanceField")
             .font(DS.Font.body)
             .foregroundStyle(DS.Color.textPrimary)
             .tint(DS.Color.accent)
@@ -159,6 +160,21 @@ struct ShotInputTray: View {
 struct ShotSubmission: Equatable {
     let input: CaddyShotInput
     let summary: String
+
+    func attachingNuance(_ rawNuance: String) -> ShotSubmission {
+        let trimmedNuance = rawNuance.trimmingCharacters(in: .whitespacesAndNewlines)
+        let nuance = trimmedNuance.isEmpty ? nil : trimmedNuance
+        let updatedInput = CaddyShotInput(
+            shotType: input.shotType,
+            lie: input.lie,
+            trouble: input.trouble,
+            distanceYards: input.distanceYards,
+            nuance: nuance
+        )
+        let updatedSummary = nuance.map { "\(summary) Nuance: \($0)" } ?? summary
+
+        return ShotSubmission(input: updatedInput, summary: updatedSummary)
+    }
 }
 
 private extension ShotInputTray.ShotTypeOption {

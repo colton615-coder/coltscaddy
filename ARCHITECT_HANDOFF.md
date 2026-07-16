@@ -37,6 +37,10 @@ summary. Not what seems reasonable.**
 If you were handed another AI's report instead of the raw files, say so and
 ask for the raw files. A report is prose. Prose is not evidence.
 
+**This handoff doc is not ground truth either.** It goes stale. If it
+conflicts with `Docs/DECISIONS.md`, the most recent DECISIONS entry wins and
+this file is wrong. This has already happened (see §4 and §6).
+
 ---
 
 ## 2. VERIFICATION RULES — CITE OR IT DIDN'T HAPPEN
@@ -80,7 +84,7 @@ honestly, plus what was tried and NOT proved, plus the recovery path.
 
 Colt often reviews from his phone and cannot read a diff. Every claim must
 come with a check he can run in under 30 seconds: a keyword search, a
-one-line command output, or a single simulator action.
+one-line command output, a GitHub commit link, or a single simulator action.
 
 ### 2.6 Cross-checking between AI agents
 
@@ -117,14 +121,23 @@ plays-like distance, and scoring. Colt's Caddy never contains any of them.
 **The most important architectural rule:** CaddyEngine owns ALL decision
 logic — deterministic, rule-ordered, testable offline. The LLM NEVER
 chooses the club, target, safe miss, or confidence. The LLM receives the
-engine's structured decision and renders it in the caddie's voice. The app
-never imports an AI-provider SDK and never stores a provider key; it posts
-to a configurable backend endpoint.
+engine's structured decision plus the engine-owned `lead`, and may re-voice
+that lead in the caddie's personality. It may not restate the card fields
+or alter the decision. The app never imports an AI-provider SDK and never
+stores a provider key; it posts to a configurable backend endpoint.
 
 **Caddie personality — three gears:** dry and decisive by default; blunt
 with light trash talk when Colt is about to do something dumb; calm and
 reset-focused when he's tilted. The caddie is unnamed. Colt is the user,
 not the caddie.
+
+**Where the build stands (verify against `Docs/ROADMAP.md` — do not trust
+this paragraph):** Phases 1–4 complete. The recommendation flow works end
+to end: shot in, engine decides, short caddie lead in the bubble, structured
+card in the thread, `Log result` writes a ShotHistory record. Phase 5.1–5.3
+complete and pushed to `origin/main`. The ChatInputBar/nuance scope gap is
+closed with model (a): nuance attaches to the next submitted shot. Remaining
+Phase 5 work is final spacing and motion polish.
 
 ---
 
@@ -150,14 +163,21 @@ Not in v1 (log it, don't build it):
 - Coach/practice layer (v2)
 - Tendency LEARNING BEHAVIOR — the models exist in v1, the behavior is
   dormant until v2
+- Conversational shot debrief (v2+/v3 — depends on shot logging as a data
+  source and the coaching layer)
 
-Also hands-off unless the roadmap says otherwise:
-- **The color system and visual aesthetic are NOT LOCKED.** The current
-  dark/gold/serif look is unintentional default styling, not a chosen
-  direction. Colt decides it from mockups, visually — not from an agent's
-  taste, and not from a written description. Using existing design tokens
-  is fine; changing their values is out of scope until the visual-lock
-  phase.
+**The visual direction IS LOCKED.** Per `Docs/DECISIONS.md` 2026-07-15,
+"Range Finder visual lock": near-black with cool grays, one cyan accent, SF
+Rounded throughout. Serif is retired. Color carries meaning and is not
+decorative — cyan is the accent, green is confidence, amber is the
+alternate play. The tokens live in `COLTSCADDY/DesignSystem/Theme.swift`,
+shipped in commit `e60ad5c`.
+
+Earlier versions of this handoff said the aesthetic was NOT locked and
+described a "dark/gold/serif" look. **That is void.** It described the
+pre-lock Codex default styling and it caused a real session to start from a
+wrong picture of the project. Use existing DS tokens freely; changing their
+values now requires a new dated DECISIONS entry, not an agent's taste.
 
 **One feature per Codex loop. Never more.**
 
@@ -167,6 +187,8 @@ Also hands-off unless the roadmap says otherwise:
 
 - Full grammatical sentences. Normal punctuation. No clipped fragments.
 - Zero wind references. Zero plays-like references. Including placeholders.
+- The bubble shows the engine's one-sentence `lead`. The card shows the
+  structured decision. They never duplicate each other.
 
 ---
 
@@ -189,6 +211,12 @@ Also hands-off unless the roadmap says otherwise:
 7. Phase locks: commit + push, tick Docs/ROADMAP.md, dated Docs/DECISIONS.md entry.
 8. Repeat for the next phase.
 
+**Git remote:** `github.com/colton615-coder/coltscaddy`, branch `main`.
+Earlier DECISIONS entries claim this checkout has no configured remote.
+That is stale — the remote works; Phases 4 through 5.3 and the v1
+ChatInputBar/nuance path are pushed.
+"Shipped" means visible in that repo's commit list, not committed locally.
+
 ---
 
 ## 7. DOC MAINTENANCE — THIS IS THE ANTI-DRIFT LAYER
@@ -202,6 +230,15 @@ session starts lost.
   completes a step.
 - `Docs/DECISIONS.md` gets a dated entry for anything decided, anything tried
   that failed, and the recovery path.
+- **When a decision reverses an earlier one, or a stated blocker clears,
+  hunt down every doc that repeats the old version and fix it in the same
+  change.** A locked decision living beside a stale "not locked" sentence is
+  worse than no doc at all — the next agent reads the stale one and starts
+  from a false picture. This has cost real sessions twice: the visual lock
+  and the git remote.
+- **Delete spent work orders.** A finished `TEMP_DAY_PLAN_*.md` or
+  `CODEX_PROMPT_*.md` left in the repo is a live instruction set describing
+  a world that no longer exists.
 - **Always produce COMPLETE, grab-and-replace files.** Colt is frequently
   on mobile and cannot hand-merge snippets. Never hand him a diff or a
   "add this line under that line."
@@ -236,8 +273,8 @@ version, ask him to confirm a specific line — do not assume.
   restarts happen. The baton is passed by handing over the FILES, not by
   summarizing one AI to another.
 - **Mockup/brainstorm agents** — good for visual exploration and idea
-  generation, especially the visual-lock phase. No architectural
-  authority. Their output is an option for Colt to look at, not a decision.
+  generation. No architectural authority. Their output is an option for
+  Colt to look at, not a decision.
 
 ---
 

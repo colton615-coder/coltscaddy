@@ -2,9 +2,8 @@
 
 ## SINGLE NEXT ACTION
 
-Fix the input bar bug: `ChatInputBar` is a non-functional placeholder, while
-`CaddyShotInput.nuance` exists but is unreachable from the UI. Optional typed
-nuance is in v1 scope per PROJECT.md.
+Phase 5 item 4: fix the golfer/bag button overlay so long message bubbles do
+not scroll underneath it. This is the first final spacing-polish task.
 
 ---
 
@@ -34,7 +33,14 @@ Finder color and typography direction.
 7. Provider-neutral voice layer: engine decision in, caddie-voiced copy out,
    with offline flat-wording fallback. ✅ DONE (backend implementation pending)
 
-## Phase 5 — Visual lock + polish
+## v1 scope gap — ChatInputBar nuance path ✅ DONE
+
+Model (a) is shipped: nuance is typed before opening the tray, attached to the
+next submitted shot, shown in the user's bubble, and cleared after submission.
+Whitespace-only input becomes `nil`. The engine does not use nuance to change
+the decision.
+
+## Phase 5 — Visual lock + polish 👉 YOU ARE HERE
 The feature work is complete; final spacing and motion polish remains.
 
 1. **5.1 — Lock Range Finder tokens in Theme.swift.** ✅ DONE
