@@ -31,6 +31,7 @@ struct COLTSCADDYApp: App {
     var body: some Scene {
         WindowGroup {
             ThreadView()
+                .preferredColorScheme(DS.preferredColorScheme)
         }
         .modelContainer(container)
     }

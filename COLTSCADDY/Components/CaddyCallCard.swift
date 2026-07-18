@@ -53,7 +53,7 @@ struct CaddyCallCard: View {
                 Text("CADDY CALL")
                     .font(DS.Font.caption)
                     .tracking(DS.Font.captionTracking)
-                    .foregroundStyle(DS.Color.accent)
+                    .foregroundStyle(DS.Color.eyebrow)
 
                 recommendationLockup
                 targetCommand
@@ -206,6 +206,10 @@ struct CaddyCallCard: View {
                 .font(DS.Font.label)
                 .foregroundStyle(DS.Color.alternate)
                 .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
+                        .fill(DS.Color.alternateFill)
+                )
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)

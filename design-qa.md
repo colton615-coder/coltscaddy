@@ -1,67 +1,94 @@
-# Caddy Call Command-First Design QA
+# Scorecard Daylight Theme Design QA
 
-- Source visual truth: `Proof/caddy-call-command-first-reference.png`
-- Implementation screenshot: `Proof/caddy-call-command-first-runtime.png`
-- Normalized comparison: `Proof/caddy-call-command-first-comparison.png`
-- Source size: 852 x 1846 pixels
-- Runtime viewport: iPhone 17 Pro simulator, 402 x 874 points, dark mode
-- State: 450-yard tee shot with OB marked; primary recommendation collapsed;
-  Alternate and reminder collapsed; Log result enabled
+- Source visual truth:
+  `/Users/colton/Desktop/COLTSCADDY-Daylight-QA-2026-07-18-1449/Screenshots/00-scorecard-daylight-source.png`
+- Primary implementation screenshot:
+  `/Users/colton/Desktop/COLTSCADDY-Daylight-QA-2026-07-18-1449/Screenshots/04-caddy-call-collapsed.png`
+- Normalized comparison:
+  `/Users/colton/Desktop/COLTSCADDY-Daylight-QA-2026-07-18-1449/Screenshots/09-source-runtime-comparison.png`
+- Runtime viewport: iPhone 17 Pro simulator, 402 x 874 points, fixed light theme
+- Primary state: 165-yard fairway full shot; Alternate and reminder collapsed;
+  Log result enabled
 
 ## Full-view comparison evidence
 
-The combined side-by-side keeps the complete reference and runtime screen in
-one image. The runtime matches the selected command-first structure: compact
-user summary, one Caddy Call surface, club and carry lockup, strong target
-command, split Safe miss / Why band, restrained amber Alternate disclosure,
-and a compact reminder / Log result action rail.
+The normalized side-by-side shows the complete selected direction and the live
+runtime at matching full-screen scale. The implementation carries the selected
+warm paper background, soft neutral surfaces, warm charcoal ink, forest-green
+user bubble and primary actions, and flag-red Caddy Call eyebrow into the
+existing production layout.
+
+The source mock's layout, green Alternate row, and decorative grid are not
+literal implementation targets in this loop. The task explicitly locks the
+existing layout, overrides Alternate to amber, and makes the grid optional.
 
 ## Required fidelity surfaces
 
-- Typography: SF Rounded and semantic Dynamic Type styles preserve the source's
-  command hierarchy without fixed-size accessibility failures.
-- Spacing and density: the live card retains the source's tight vertical rhythm,
-  thin dividers, aligned two-column information band, and compact action rail.
-- Color: near-black background, cool dark card, cyan recommendation accent,
-  amber alternate action, and quiet gray detail text match the selected visual.
-- Icons: production uses native SF Symbols. `figure.golf` replaces the generated
-  custom club mark while keeping the same visual weight and alignment.
-- Copy: the dedicated fixture renders `3 Hybrid`, `200 yds`, and
-  `Aim at the widest fairway`. Engine-owned Safe miss and Why copy remain live
-  rather than being hard-coded to the mock.
+- Typography: SF Rounded and all existing type sizes and hierarchy are retained.
+- Spacing and layout: the production ThreadView, compact Caddy Call, disclosure
+  states, sheets, tray, bag editor, and composer geometry are unchanged.
+- Color: every production color continues to flow through `DS.Color`; no view
+  introduces a hardcoded color.
+- Imagery and icons: existing native SF Symbols are unchanged. The source's
+  generated device frame and decorative treatment are reference presentation,
+  not app assets.
+- Copy: production retains engine-owned and app-owned copy rather than replacing
+  it with illustrative mock text.
 
-## Focused-region evidence
+## Focused-state evidence
 
-A separate crop is unnecessary. The normalized 1728 x 1846 comparison keeps
-the full card readable at original reference height, including every divider,
-label, icon, and control under review.
+Separate full-resolution captures were reviewed because color behavior depends
+on state and several important details are too small in the combined comparison:
+
+- `01-thread-view.png`
+- `02-chat-input-bar.png`
+- `03-shot-input-tray.png`
+- `04-caddy-call-collapsed.png`
+- `05-caddy-call-alternate-expanded.png`
+- `06-caddy-call-reminder-expanded.png`
+- `07-outcome-picker-sheet.png`
+- `08-bag-editor-view.png`
+
+All are in
+`/Users/colton/Desktop/COLTSCADDY-Daylight-QA-2026-07-18-1449/Screenshots/`.
+
+## Contrast evidence
+
+- Primary ink `#202720` on background `#F7F3E8`: 13.80:1
+- Primary ink `#202720` on surface `#ECE6D9`: 12.30:1
+- Cream accent ink `#FFF9EE` on forest green `#285C3D`: 7.45:1
+- Flag red `#A33A32` on surface `#ECE6D9`: 5.26:1
+- Amber text `#6B4A08` on amber fill `#F3E1A9`: 6.19:1
+
+All required pairings pass WCAG AA. The tightest additional text pairing is
+tertiary text `#5D675F` on surface `#ECE6D9` at 4.73:1.
 
 ## Findings
 
-- No actionable P0, P1, or P2 visual differences remain.
-- P3: the production user summary uses the app's existing sentence format
-  instead of the mock's abbreviated dot-separated format.
-- P3: actual deterministic engine copy is slightly longer than the illustrative
-  mock copy in Safe miss and Why.
-- P3: the native golf figure differs from ImageGen's custom club mark by design;
-  no new raster or third-party icon asset was introduced.
+- No actionable P0, P1, or P2 visual differences remain within the locked
+  token-and-fill scope.
+- P3: the flat paper background is intentionally cleaner than the source's
+  subtle grid. The optional grid was skipped because the theme reads as paper
+  without adding a decorative layer to every screen.
+- P3: the amber disclosure is intentionally different from the green row in the
+  mock because amber remains the Alternate semantic color.
 
 ## Patches applied during QA
 
-1. Replaced the tall stacked card with the selected command-first composition.
-2. Added the missing article so the target reads `Aim at the widest fairway`.
-3. Shortened the visible disclosure label from `Alternate play` to `Alternate`
-   while retaining the descriptive accessibility label.
-4. Recaptured the runtime and regenerated the combined comparison after both
-   corrections.
+1. Replaced the Range Finder tokens with the WCAG-checked Scorecard Daylight
+   palette and removed the unused confidence color tokens.
+2. Assigned light accent ink to forest-green user bubbles and primary controls.
+3. Assigned flag red only to the Caddy Call eyebrow.
+4. Added the warm amber Alternate fill without changing disclosure geometry.
+5. Fixed the app to the single Daylight color scheme.
 
 ## Interaction verification
 
-- Confirmed the dedicated 450-yard tee-shot fixture renders `3 Hybrid`,
-  `200 yds`, the target command, Safe miss, Why, and both action controls.
-- Confirmed the existing submitted-shot flow still renders the structured card,
-  expands its disclosures, and keeps Log result hittable.
-- Confirmed the card provides stacked fallbacks at accessibility Dynamic Type
-  sizes and suppresses movement when Reduce Motion is enabled.
+- The complete `COLTSCADDYTests` target passed 22 tests.
+- The focused structured-card/outcome flow and compact Caddy Call UI tests
+  passed; the bag-button route test also passed for screenshot coverage.
+- Simulator observation covers the collapsed card, both expanded disclosures,
+  outcome sheet, shot tray, bag editor, ThreadView, and ChatInputBar.
+- No physical-device observation has occurred.
 
 final result: passed

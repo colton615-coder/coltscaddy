@@ -1,21 +1,23 @@
 import SwiftUI
 
 enum DS {
+    static let preferredColorScheme: SwiftUI.ColorScheme = .light
+
     enum Color {
-        static let bg = SwiftUI.Color(hex: 0x08090A)
-        static let surface = SwiftUI.Color(hex: 0x121417)
-        static let surfaceBubbleThem = SwiftUI.Color(hex: 0x141719)
-        static let surfaceBubbleMe = SwiftUI.Color(hex: 0x1D2A31)
-        static let hairline = SwiftUI.Color.rgba(red: 255, green: 255, blue: 255, alpha: 0.10)
-        static let textPrimary = SwiftUI.Color(hex: 0xF5F7F8)
-        static let callDetail = SwiftUI.Color(hex: 0xD4DADF)
-        static let textSecondary = SwiftUI.Color(hex: 0x8A949B)
-        static let textTertiary = SwiftUI.Color(hex: 0x5C666D)
-        static let accent = SwiftUI.Color(hex: 0x4CC9F0)
-        static let accentInk = SwiftUI.Color(hex: 0x04222B)
-        static let confidence = SwiftUI.Color(hex: 0x3DDC97)
-        static let confidenceFill = SwiftUI.Color.rgba(red: 61, green: 220, blue: 151, alpha: 0.12)
-        static let alternate = SwiftUI.Color(hex: 0xF5B841)
+        static let bg = SwiftUI.Color(hex: 0xF7F3E8)
+        static let surface = SwiftUI.Color(hex: 0xECE6D9)
+        static let surfaceBubbleThem = SwiftUI.Color(hex: 0xECE6D9)
+        static let surfaceBubbleMe = SwiftUI.Color(hex: 0x285C3D)
+        static let hairline = SwiftUI.Color(hex: 0xD1C7B8)
+        static let textPrimary = SwiftUI.Color(hex: 0x202720)
+        static let callDetail = SwiftUI.Color(hex: 0x303A32)
+        static let textSecondary = SwiftUI.Color(hex: 0x4E5B51)
+        static let textTertiary = SwiftUI.Color(hex: 0x5D675F)
+        static let accent = SwiftUI.Color(hex: 0x285C3D)
+        static let accentInk = SwiftUI.Color(hex: 0xFFF9EE)
+        static let eyebrow = SwiftUI.Color(hex: 0xA33A32)
+        static let alternate = SwiftUI.Color(hex: 0x6B4A08)
+        static let alternateFill = SwiftUI.Color(hex: 0xF3E1A9)
     }
 
     enum Font {
@@ -79,9 +81,5 @@ private extension SwiftUI.Color {
         let green = Double((hex >> 8) & 0xFF) / 255.0
         let blue = Double(hex & 0xFF) / 255.0
         self.init(red: red, green: green, blue: blue)
-    }
-
-    static func rgba(red: Double, green: Double, blue: Double, alpha: Double) -> SwiftUI.Color {
-        SwiftUI.Color(red: red / 255.0, green: green / 255.0, blue: blue / 255.0, opacity: alpha)
     }
 }

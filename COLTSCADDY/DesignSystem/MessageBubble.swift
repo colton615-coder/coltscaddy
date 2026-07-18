@@ -17,7 +17,7 @@ struct MessageBubble: View {
 
             Text(text)
                 .font(font)
-                .foregroundStyle(DS.Color.textPrimary)
+                .foregroundStyle(foregroundColor)
                 .multilineTextAlignment(sender == .them ? .leading : .trailing)
                 .padding(.horizontal, DS.Spacing.lg)
                 .padding(.vertical, DS.Spacing.md)
@@ -46,6 +46,15 @@ struct MessageBubble: View {
             DS.Color.surfaceBubbleThem
         case .me:
             DS.Color.surfaceBubbleMe
+        }
+    }
+
+    private var foregroundColor: Color {
+        switch sender {
+        case .them:
+            DS.Color.textPrimary
+        case .me:
+            DS.Color.accentInk
         }
     }
 
