@@ -92,7 +92,7 @@ struct ThreadView: View {
             ) { outcome in
                 logResult(for: request.messageID, outcome: outcome)
             }
-            .presentationDetents([.height(360)])
+            .presentationDetents([.height(344)])
             .presentationDragIndicator(.visible)
             .presentationCornerRadius(28)
             .presentationBackground(DS.Color.surface)

@@ -24,41 +24,44 @@ struct OutcomePickerSheet: View {
                     .foregroundStyle(DS.Color.callDetail)
             }
 
-            LazyVGrid(columns: columns, spacing: DS.Spacing.sm) {
-                ForEach(Outcome.allCases, id: \.self) { outcome in
-                    Button {
-                        selectOutcome(outcome)
-                        dismiss()
-                    } label: {
-                        Text(outcome.displayName)
-                            .font(DS.Font.button)
-                            .foregroundStyle(DS.Color.textPrimary)
-                            .frame(maxWidth: .infinity, minHeight: 52)
-                            .background(
-                                RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
-                                    .fill(DS.Color.bg)
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
-                                    .stroke(DS.Color.hairline)
-                            )
+            VStack(spacing: DS.Spacing.md) {
+                LazyVGrid(columns: columns, spacing: DS.Spacing.md) {
+                    ForEach(Outcome.allCases, id: \.self) { outcome in
+                        Button {
+                            selectOutcome(outcome)
+                            dismiss()
+                        } label: {
+                            Text(outcome.displayName)
+                                .font(DS.Font.button)
+                                .foregroundStyle(DS.Color.textPrimary)
+                                .frame(maxWidth: .infinity, minHeight: 52)
+                                .background(
+                                    RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
+                                        .fill(DS.Color.bg)
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
+                                        .stroke(DS.Color.hairline)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("outcome-\(outcome.rawValue)")
+                        .accessibilityLabel("Log \(outcome.displayName.lowercased()) outcome")
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("outcome-\(outcome.rawValue)")
-                    .accessibilityLabel("Log \(outcome.displayName.lowercased()) outcome")
                 }
-            }
 
-            Button("Cancel") {
-                dismiss()
+                Button("Cancel") {
+                    dismiss()
+                }
+                .font(DS.Font.button)
+                .foregroundStyle(DS.Color.accent)
+                .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("outcomeCancelButton")
             }
-            .font(DS.Font.button)
-            .foregroundStyle(DS.Color.accent)
-            .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("outcomeCancelButton")
         }
-        .padding(DS.Spacing.xl)
+        .padding(.horizontal, DS.Spacing.xl)
+        .padding(.vertical, DS.Spacing.lg)
         .background(DS.Color.surface)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("outcomePicker")
@@ -71,6 +74,6 @@ struct OutcomePickerSheet: View {
         distanceText: "165 yds",
         selectOutcome: { _ in }
     )
-    .presentationDetents([.height(360)])
+    .presentationDetents([.height(344)])
     .presentationDragIndicator(.visible)
 }
