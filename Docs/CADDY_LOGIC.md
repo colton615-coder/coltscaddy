@@ -1,60 +1,102 @@
-# Caddy Logic — the brain
+# Caddy Logic — Current Engine and Approved Evolution
 
-CaddyEngine is deterministic and rule-ordered for v1. Rules fire top-down;
-the first matching rule in each section wins. Weighted/learned overrides are
-v2. The learning MODELS exist now; the learning BEHAVIOR is dormant.
+This file owns the truth about current deterministic recommendation behavior.
+The north star defines future direction; it does not make future behavior live.
 
-## Colt's three leaks (the spine of the engine)
+## Current v1 engine
 
-1. TEE SHOTS: bad tee shots are leak #1. Rule: when trouble (water/OB/trees)
-   is marked on a tee shot, recommend the most IN-PLAY club, not driver.
-   Driver is only recommended when trouble is "none" or the miss is safe.
-2. SHORT CHIPS: chunked short chips are leak #2. Rule: for chip-type shots,
-   default to the LOWEST-loft option that works — putt first, bump-and-run
-   second, lofted wedge last. The 60-degree is never the default.
-3. TROUBLE COMPOUNDING: big numbers come from hero recoveries. Rule: when the
-   lie is bad or trouble is marked between ball and target, bias hard toward
-   the wedge-distance bailout or punch-out. Advancing to a full-wedge number
-   is a WIN, not a lay-up.
+`CaddyEngine` is pure Swift, deterministic, rule-ordered, and usable offline.
+It receives a structured `CaddyShotInput` plus plain Swift bag carries. It does
+not currently read confirmed tendencies, validated cues, preferred shapes,
+History, outcome patterns, or a `PlayerKnowledgeSnapshot`.
 
-## Decision order (v1)
+Current top-level order:
 
-1. Validate input (shot type, lie, trouble set, distance).
-2. Apply the leak rules above for the matching shot type.
-3. Select club from PlayerProfile bag distances (closest carry that keeps
-   trouble out of play; round toward safety, never toward the hero number).
-4. Choose target and safe miss from the trouble map (miss AWAY from marked
-   trouble; when trouble is long, favor short; when trouble is one side,
-   favor the other).
-5. Produce the alternate play: the next-safest option, always shown.
-6. Assign confidence band.
+1. Normalize `Trouble.none` out of the trouble set.
+2. If distance is zero or negative, return a complete low-confidence safe call.
+3. Route by shot type: Tee, Chip, Putt, or Full.
+4. Produce club, distance, target, safe miss, why, confidence, alternate, lead,
+   and a static shot-type execution cue.
 
-## Confidence bands
+### Tee
 
-low / medium / medium-high / high. Confidence describes how sure the caddie
-is, driven by: completeness of input, whether a confirmed tendency applies,
-and sample size behind that tendency. Confidence NEVER blocks a call — the
-caddie always commits. No clarifying questions before low-confidence calls.
+- Water, OB, or trees select the first available in-play club from the current
+  hard-coded preference order, with driver excluded.
+- With no penalty trouble, use Driver when present; otherwise use the longest
+  club.
 
-## Tendency lifecycle (models live now, behavior activates in v2)
+### Chip
 
-Fact → Result → Inference → Confirmed. A tendency warning requires a minimum
-of three instances before it may fire. User confirmation is an explicit gate
-before anything becomes Confirmed. Recency-weighted evidence blend: today's
-evidence shifts confidence but never fully overrides a confirmed tendency.
-Scoring-versus-learning intent is inferred from risk context; there is no
-explicit toggle.
+- Sand lie or bunker trouble selects Sand Wedge when present, otherwise the
+  highest-loft available wedge.
+- A clean fairway chip of 12 yards or less selects Putter.
+- Other chips select an 8 Iron when present, then 9 Iron, then the shortest
+  non-wedge fallback. A lofted wedge remains the alternate.
 
-## Voice contract
+This low-loft chip behavior is a generic hard-coded safety heuristic. It is not
+confirmed personal knowledge about Colt, and the current 8 Iron preference must
+not be described as a learned tendency.
 
-The engine outputs a `lead` (one short, complete sentence) alongside the
-structured decision (play, target, safe miss, why, confidence, alternate).
-The bubble shows the lead; the Caddy Call card shows the structured decision.
-They do not duplicate each other. The LLM may re-voice the lead in one of
-three gears:
-- Default: dry, decisive, brief.
-- Guardrail: blunt with light trash talk when the input pattern matches one
-  of the three leaks and Colt is about to do the dumb thing anyway.
-- Reset: calm and steadying when recent logged outcomes show a bad stretch.
-The re-voiced lead may not restate the card fields or alter the decision. All
-rendered copy: full sentences, normal punctuation, no wind, no plays-like.
+### Putt
+
+- Select Putter, start line, and speed-first safe-miss language.
+
+### Full shot
+
+- Rough, sand, or any marked trouble selects the wedge closest to 100 yards as
+  a bailout; punch-out is the alternate.
+- A clean full shot selects the shortest club that carries at least the entered
+  distance. The next shorter club is the safer alternate.
+
+### Confidence and voice
+
+Current confidence is branch-owned static engine output. It is not calculated
+from sample size or learned evidence. Confidence never blocks the current call.
+
+The engine also owns one short fallback `lead` and one static execution cue per
+shot type. The optional language service may re-voice a completed lead but may
+not change any structured field. The live UI currently renders the card without
+a post-shot lead bubble.
+
+## Generic guardrails versus personal knowledge
+
+The current tee-safety, low-loft chip, and recovery-bailout rules are generic
+starter guardrails. They are not "Colt's three leaks," confirmed tendencies, or
+evidence-backed personalization. Bag carries are user-editable facts; today
+they are the only player data used by the engine.
+
+Generic guardrails may remain as conservative defaults, but future confirmed
+preferences can supersede them only through an explicit, tested knowledge
+slice. UI and copy must label the difference honestly.
+
+## Current result evidence
+
+The Quick Grid persists one of six outcomes: Good, Left, Right, Short, Long, or
+Poor contact. The current write does not analyze, infer, confirm, or activate a
+tendency.
+
+Short and Long are categorical outcomes, not measured distance evidence. They
+may never update a carry value or support a carry proposal without separate
+user-entered measured or estimated distance and provenance.
+
+## Approved future evolution — not implemented
+
+Future Roadmap slices may add:
+
+- A validator that asks one material follow-up when missing information could
+  change the call. The current engine instead returns a safe low-confidence
+  call for invalid distance and asks no clarifying question.
+- An evidence analyzer that creates observations without changing calls.
+- Learning proposals with sample size, recency, relevance, and provenance.
+- An immutable `PlayerKnowledgeSnapshot` containing user-entered facts,
+  confirmed tendencies, and validated cues.
+- Confirmed overrides that affect later recommendations.
+
+Only user-entered facts and explicitly approved proposals may enter the future
+snapshot and change recommendations. Unconfirmed observations may eventually
+lower confidence or trigger a focused question, but they may not silently
+choose another club, mutate the profile, or rewrite history.
+
+Smart follow-up, learned overrides, and snapshot integration each require their
+own Roadmap slice and focused proof. No future behavior in this section is live
+today.

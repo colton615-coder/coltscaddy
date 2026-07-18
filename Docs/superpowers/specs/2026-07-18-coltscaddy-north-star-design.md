@@ -1,6 +1,6 @@
 # Colt's Caddy North-Star Product and Architecture Design
 
-**Status:** Approved in conversation; awaiting written-spec review
+**Status:** Approved; Phase 0 source-of-truth reconciliation authorized
 **Date:** 2026-07-18
 **Selected direction:** Focused Caddie Loop
 **Repository:** `/Users/colton/Desktop/COLTSCADDY`

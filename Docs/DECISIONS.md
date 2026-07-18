@@ -1,5 +1,61 @@
 # Decisions
 
+## 2026-07-18 — Focused Caddie Loop is the approved north star
+
+### Decisions locked
+
+- Colt approved the Focused Caddie Loop documented in
+  `Docs/superpowers/specs/2026-07-18-coltscaddy-north-star-design.md` at commit
+  `6d2cef7` (`Document Colt's Caddy north star`). The spec governs direction;
+  `Docs/ROADMAP.md` still authorizes only one next implementation slice.
+- The opening job is Get the Call. The primary navigation is Play + History:
+  Play owns one live caddie turn, and History opens with learned insights before
+  review and the complete shot chronology.
+- Player Profile opens from the golfer button. There is no standalone Coach
+  tab; execution help stays contextual in Play and evidence-backed insight
+  belongs in History.
+- There is no round or session product model. Shots are timestamped and grouped
+  by calendar date.
+- Player Knowledge uses an explicit confirmation gate. Observations and
+  proposals cannot silently change a recommendation or mutate the profile.
+- Input is hybrid: type, tap-first structured entry, and later press-to-talk all
+  resolve to validated structured context. One material follow-up is allowed
+  only when missing information could change the call.
+- Aim View survives as a future manual, abstract child of Caddy Call. Green Map
+  is removed. Aim View may not use GPS, location, course imagery, course data,
+  or automatic target detection.
+- Persistence remains local-first. Private iCloud sync is future
+  infrastructure behind the persistence boundary; there is no custom account.
+- Scorecard Daylight is the active visual lock: warm paper and neutral surfaces,
+  charcoal ink, forest-green brand/actions, small-dose flag red, amber
+  Alternate semantics, and SF Rounded.
+
+### Superseded directions
+
+- The accumulating lifetime thread is an implementation baseline, not the
+  approved destination. A later slice replaces it with one restorable live
+  turn.
+- Range Finder is superseded by Scorecard Daylight.
+- Historical Green Map and standalone coaching directions are not future scope.
+
+## 2026-07-18 — Phase 0 reconciles active source-of-truth documents
+
+- `Docs/PROJECT.md` is now the canonical product and experience authority.
+  `Docs/ROADMAP.md` remains the only authority for the next action;
+  `Docs/ARCHITECTURE.md` and `Docs/CADDY_LOGIC.md` own current technical and
+  engine truth. This log records dated decisions, and `ARCHITECT_HANDOFF.md` is
+  orientation only.
+- Current implementation, approved north star, deferred work, and permanent
+  non-goals are separated explicitly. The external July 13 source update
+  remains historical input only.
+- Phase 5 is closed to its recorded simulator/design-QA boundary: the compact
+  picker has committed before/after evidence, and the Scorecard Daylight QA
+  covers the remaining focused surfaces with no actionable P0/P1/P2 findings.
+  No physical-device visual pass has occurred.
+- The next implementation slice is the Play + History app shell. It may not
+  absorb one-live-turn reset, Shot Detail, learning, natural-language parsing,
+  Aim View, speech, or iCloud sync.
+
 ## 2026-07-18 — Caddy Call uses the compact Command Strip direction
 
 ### Decisions locked
@@ -8,8 +64,9 @@
   2, the compact Command Strip, from three screenshot-grounded visual options.
 - The selected visual source is
   `Proof/caddy-call-command-first-reference.png`. It supersedes the earlier
-  Caddy Call layout reference while preserving the locked Range Finder palette,
-  SF Rounded voice, and native control behavior.
+  Caddy Call layout reference while preserving the then-active Range Finder
+  palette, SF Rounded voice, and native control behavior. The palette was later
+  superseded by Scorecard Daylight; the layout contract remains active.
 - The recommendation is command-first: club and carry share one hero row, the
   target is the strongest instruction, Safe miss and Why share a compact band,
   Alternate is restrained amber text, and reminder / Log result share one
@@ -59,9 +116,10 @@
 - Cancel or dismissing the sheet writes nothing. Choosing one outcome writes
   exactly one `ShotHistory` record using the existing shot and decision, then
   disables that card's Log result action.
-- The sheet uses the locked Range Finder colors and SF Rounded typography. It
-  does not add tendency behavior, coaching, a new data model, or a second
-  result flow.
+- The sheet used the then-active Range Finder colors and SF Rounded typography.
+  Scorecard Daylight later replaced those color tokens without changing the
+  sheet contract. It does not add tendency behavior, coaching, a new data model,
+  or a second result flow.
 
 ### Implemented and proved
 
@@ -296,6 +354,8 @@
 
 ## 2026-07-15 — Range Finder visual lock
 
+- **SUPERSEDED 2026-07-18:** Scorecard Daylight is now the active visual lock.
+  The bullets below remain as historical decision context only.
 - Colt chose the Range Finder direction from reviewed mockups.
 - The visual system is locked to near-black with cool grays, one cyan accent,
   and SF Rounded throughout. Serif is retired.
@@ -322,13 +382,17 @@ repo's written record in line with decisions already made)
 - v1 scope EXPANDED and re-locked: full recommendation-engine behavior plus
   SwiftData persistence are IN v1. All prior "no persistence" language is void.
 - Thread interaction pattern LOCKED: conversational feed, caddie speaks in
-  bubbles, Caddy Call lands as a card in the thread.
+  bubbles, Caddy Call lands as a card in the thread. **SUPERSEDED as a
+  north-star destination on 2026-07-18:** the current card survives inside one
+  live Play turn rather than an accumulating lifetime thread.
 - Color system / visual aesthetic: NOT locked. Current dark/gold/serif look is
   unintentional default styling, not a chosen direction.
 - Wind / plays-like modeling: permanently out of scope. 18Birdies owns GPS,
   wind, plays-like distance, and scoring.
-- Aim View: deferred until core recommendation flow is solid.
+- Aim View: deferred until core recommendation flow is solid. **CLARIFIED
+  2026-07-18:** it is a future manual, abstract child of Caddy Call only.
 - Green Map: logged as deferred module, sibling to Aim View. Not started.
+  **SUPERSEDED 2026-07-18:** Green Map is removed from the product.
 - Caddie is unnamed. Colt is the user, not the caddie.
 - Engine style for v1: HARD DETERMINISTIC RULES, ordered, first-match-wins.
   Weighted/learned overrides deferred to v2. Rationale: no tuning data exists
