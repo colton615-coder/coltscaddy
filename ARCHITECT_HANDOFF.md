@@ -8,11 +8,14 @@
 
 **Branch:** `main`
 
-**Current shipped commit:** `1d369b0` (`origin/main`)
+**Current production baseline:** `6777494` (`origin/main` before this
+handoff-only refresh)
+
 **Working tree before this handoff edit:** clean
 
-Paste this entire file into the new chat. Current repo files outrank this
-summary if anything has changed since 2026-07-18.
+Paste this entire file into a new chat. Current source, `Docs/ROADMAP.md`, and
+the latest entries in `Docs/DECISIONS.md` outrank this summary if the repo has
+advanced since 2026-07-18.
 
 ---
 
@@ -23,42 +26,43 @@ Act as a senior SwiftUI / SwiftData engineer and product-design partner.
 
 Before proposing or changing code:
 
-1. Run `git status --short`, `git branch --show-current`, and
-   `git log -5 --oneline --decorate`.
-2. Read the ground-truth files in Section 2 below.
-3. Confirm the exact `SINGLE NEXT ACTION` from `Docs/ROADMAP.md`.
-4. Inspect the current implementation seams named in Section 7.
-5. Preserve all approved Caddy Call UI decisions and proof artifacts.
+1. Run `git status --short --branch`, `git branch --show-current`, and
+   `git log origin/main -5 --oneline --decorate`.
+2. Read the ground-truth files in Section 2 in order.
+3. Quote the exact `SINGLE NEXT ACTION` from `Docs/ROADMAP.md`.
+4. Inspect the current implementation seams and proof artifacts named below.
+5. Stop if a pasted prompt conflicts with current source or repo docs.
 
-Do not start a second feature, redesign the approved card, activate dormant
-tendency behavior, or infer that a planning summary is newer than the source.
-Use one editing agent only. Report proof boundaries honestly: build, test,
-simulator observation, physical-device observation, commit, and push are
-different claims.
+Use one editing agent only. Other agents may review or advise, but they must not
+edit this checkout concurrently. Report build, tests, simulator observation,
+physical-device observation, commit, push, and remote visibility as separate
+proof claims.
 
-The immediate continuation point is **Outcome tap**, but its presentation is
-not yet locked. Ask Colt one focused visual/product question before coding:
+The immediate continuation point is the **Phase 5 compact outcome-picker
+spacing and motion audit**. Outcome capture is already implemented. Do not
+rebuild it, reopen its presentation choice, or start another feature.
 
-> When Log result is tapped, should the six outcome choices expand inline
-> inside the Caddy Call card, or open in a compact bottom sheet?
-
-Recommend one after inspecting the current card and explain the tradeoff in
-plain English. Do not reopen the rest of the Caddy Call design.
+The Range Finder visual system remains locked. General feedback such as
+"brighter," "bolder," or "more wow" is not authorization to replace
+`Theme.swift` or select a new visual direction. Reopening that lock requires an
+explicit product decision from Colt based on reviewed visual options.
 
 ---
 
 ## 2. GROUND TRUTH — READ IN THIS ORDER
 
-1. `Docs/PROJECT.md` — product vision and v1 boundaries
+1. `Docs/PROJECT.md` — product vision, v1 scope, and prohibited features
 2. `Docs/ROADMAP.md` — the only authority for what happens next
-3. `Docs/DECISIONS.md` — latest dated decision wins
-4. `Docs/CADDY_LOGIC.md` — deterministic recommendation rules
-5. `Docs/ARCHITECTURE.md` — modules, persistence, and AI boundary
-6. `design-qa.md` — approved Caddy Call fidelity record
-7. This handoff — orientation only; lower authority than current source/docs
+3. `Docs/ARCHITECTURE.md` — modules, persistence, and AI boundary
+4. `Docs/DECISIONS.md` — latest dated decision wins
+5. `Docs/CADDY_LOGIC.md` — deterministic recommendation rules
+6. `design-qa.md` — current Caddy Call fidelity record
+7. Current source and tests named in Sections 6 and 7
+8. This handoff — orientation only; lower authority than current artifacts
 
-If any statement below conflicts with current code or the latest decision log,
-say so and follow the current artifact.
+If any statement below conflicts with the current repo, report the conflict and
+follow the higher-authority artifact. Never silently reconcile stale work
+orders by changing code.
 
 ---
 
@@ -66,95 +70,176 @@ say so and follow the current artifact.
 
 `Docs/ROADMAP.md` currently says:
 
-> Outcome tap — Log result captures one outcome value (good / left / right /
-> short / long / poor contact) into ShotHistory.
+> Continue the Phase 5 screen-by-screen visual audit with the compact outcome
+> picker's spacing and motion.
 
-Completed before this handoff:
+Completed and present on the production baseline:
 
 - App shell, SwiftData container, models, profile seeding, and editable bag
-- Deterministic `CaddyEngine` with tests
-- Shot-input tray wired to the engine
-- Typed nuance attached to the next submitted shot
-- Structured Caddy Call card in the thread
-- Base `Log result` path that writes one `ShotHistory` record
-- Provider-neutral voice service retained in code for future use
-- Static Remind me how execution cues for every shot type
-- Approved card-only Caddy Call visual refinement
-- Bag-button safe-area regression fix
+- Deterministic `CaddyEngine` with unit coverage
+- Tap-first shot tray wired to the engine
+- Optional typed nuance attached to the next submitted shot
+- Structured, card-only Caddy Call response in the thread
+- Static `Remind me how` execution cues for all four shot types
+- Bag-button top safe-area inset and its long-thread regression test
+- Compact Quick Grid outcome picker and required-outcome persistence seam
+- Compact Command Strip Caddy Call with accessibility fallbacks
+- Provider-neutral voice service retained for future conversational surfaces
 
-The final spacing/motion audit remains deferred until after Outcome tap.
-Everything in Phase 6 remains out of scope.
+Phase 5 final spacing and motion polish is in progress:
 
----
+- Caddy Call command-first audit: done
+- Compact outcome-picker audit: next
+- Bag button, tray, and composer audit: pending
 
-## 4. MOST RECENT SHIPPED CHECKPOINT
-
-The July 18 Caddy Call refinement is complete and pushed at `1d369b0`.
-
-Locked visible behavior:
-
-- Initial greeting remains.
-- Submitted shot summary is followed directly by the Caddy Call card.
-- No separate post-shot lead bubble.
-- No user-facing confidence badge or `Medium-high` label.
-- Original stacked `Target`, `Safe miss`, and `Why` structure remains.
-- Headings are 21-point bold SF Rounded.
-- Values are 17-point, brighter, and concise.
-- Alternate play is an amber disclosure, collapsed by default.
-- Remind me how is collapsed by default and expands inline to
-  `COMMIT TO THIS` plus one compact execution cue.
-- `Log result` is the full-width cyan primary action.
-- Native chat scrolling prioritizes the newest card and composer; old greeting
-  content may scroll away when the expanded card needs the viewport.
-
-For the clean 165-yard full-shot fixture, the exact visible copy is:
-
-- Club: `7 Iron`
-- Distance: `165 yds`
-- Target: `Center green.`
-- Safe miss: `Short is fine.`
-- Why: `Stock number. No need to force it.`
-- Reminder: `SET THE FACE  •  SET YOUR FEET  •  COMMIT`
-
-The wording is engine-owned. Recommendation order, club choice, trouble logic,
-confidence calculations, bag data, and persistence behavior were not changed
-by the visual pass.
+Everything in Phase 6 remains out of scope. The separate Full + Tee routing
+defect mentioned in the latest decision log is not part of the current visual
+loop and must not be fixed silently.
 
 ---
 
-## 5. APPROVED VISUAL SOURCE OF TRUTH
+## 4. LATEST LOCKED PRODUCT AND VISUAL DECISIONS
 
-Do not redesign the Caddy Call card from memory. Open these files:
+### 2026-07-17 — Static execution tips
 
-- `Proof/caddy-call-approved-reference.png` — Colt-approved visual target
-- `Proof/caddy-call-approved-runtime.png` — final simulator implementation
-- `Proof/caddy-call-approved-comparison.png` — normalized side-by-side
-- `design-qa.md` — fidelity findings and iteration history
+- `Remind me how` uses one deterministic, engine-owned tip per `ShotType`.
+- The tip expands inside the card and works offline.
+- `Tendency` and `CoachingCue` remain dormant.
 
-`design-qa.md` ends with `final result: passed` and records no remaining
-P0/P1/P2 mismatch.
+### 2026-07-18 — Card-only post-shot response
 
-Do not overwrite `Proof/phase-5-2-caddy-call-card.png`; it had a separate user
-modification during the July 18 pass.
+- The initial caddie greeting remains.
+- A submitted shot summary is followed directly by the Caddy Call card.
+- There is no separate post-shot lead bubble and no visible confidence badge.
+- `CaddyDecision.lead` and `CaddyVoiceService` remain in the codebase for future
+  conversational surfaces; they are not rendered in this live flow.
+- Alternate and reminder content are collapsed by default.
+
+### 2026-07-18 — Compact Quick Grid outcome picker
+
+- Tapping `Log result` opens a compact bottom sheet over the current card.
+- The sheet presents exactly six outcomes in a 2-by-3 grid: Good, Left, Right,
+  Short, Long, and Poor contact.
+- Cancel or interactive dismissal writes nothing.
+- Choosing one outcome writes exactly one `ShotHistory` record and disables
+  that card's `Log result` action.
+- Outcome capture does not activate tendencies, coaching, inference, or a
+  second result flow.
+
+### 2026-07-18 — Compact Command Strip Caddy Call
+
+- Colt selected displayed Proposal 2, the compact Command Strip, after
+  screenshot-grounded comparison.
+- Club and carry share the hero row.
+- Target is the strongest command.
+- Safe miss and Why share a compact information band.
+- Alternate is a restrained amber disclosure.
+- Reminder and `Log result` share a compact action rail at normal Dynamic Type
+  sizes and stack at accessibility sizes.
+- The card uses semantic Dynamic Type, 44-point actions, native SF Symbols,
+  and Reduce Motion-aware disclosure transitions.
+- The locked Range Finder palette and SF Rounded typography remain in force.
 
 ---
 
-## 6. ARCHITECTURAL BOUNDARIES
+## 5. CURRENT VISUAL SOURCE OF TRUTH
+
+Do not redesign the Caddy Call from memory. Open these files:
+
+- `Proof/caddy-call-command-first-reference.png` — Colt-selected visual target
+- `Proof/caddy-call-command-first-runtime.png` — verified simulator result
+- `Proof/caddy-call-command-first-comparison.png` — normalized side-by-side
+- `design-qa.md` — fidelity findings and iteration record
+
+`design-qa.md` ends with `final result: passed` and records no actionable
+P0/P1/P2 Caddy Call differences.
+
+The older `Proof/caddy-call-approved-*` files document the superseded tall card
+pass. They are historical evidence, not the current Caddy Call target. Do not
+overwrite `Proof/phase-5-2-caddy-call-card.png`; it contains a separate user
+modification.
+
+The DEBUG-only `-UITestCompactCaddyCall` fixture renders a deterministic
+450-yard tee shot with OB through the real engine. Its verified collapsed state
+shows `3 Hybrid`, `200 yds`, `Aim at the widest fairway`, Safe miss, Why,
+Alternate, reminder, and `Log result`.
+
+---
+
+## 6. CURRENT OUTCOME-PICKER CONTRACT AND SEAMS
+
+Inspect these before the visual audit:
+
+- `COLTSCADDY/Components/OutcomePickerSheet.swift`
+  - Owns the current 2-by-3 Quick Grid presentation.
+  - Uses a 52-point minimum outcome target and a full-width Cancel action.
+- `COLTSCADDY/Screens/ThreadView.swift`
+  - Presents the picker with `.sheet(item:)`, a 360-point detent, visible drag
+    indicator, 28-point corner radius, and the existing surface color.
+  - Calls `ShotHistoryStore.log` only after an outcome is selected.
+- `COLTSCADDY/Models/CoreTypes.swift`
+  - `Outcome` has exactly six cases and owns their display names.
+- `COLTSCADDY/Models/ShotHistoryStore.swift`
+  - `log(shot:decision:outcome:in:)` requires a non-optional `Outcome`.
+- `COLTSCADDYTests/ShotHistoryStoreTests.swift`
+  - Proves the stored outcome and all six display names.
+- `COLTSCADDYUITests/COLTSCADDYUITests.swift`
+  - `testSubmittingShotRendersStructuredCaddyCallCard` proves the six choices,
+    Cancel-without-disable behavior, selection, and final disabled state.
+
+Behavior that must survive the visual audit:
+
+1. `Log result` opens the compact local sheet.
+2. All six existing outcomes remain available one-to-one.
+3. Cancel and dismissal do not write.
+4. One selection writes one record with the selected outcome.
+5. The originating card becomes logged and cannot create a duplicate.
+6. Existing Alternate and reminder disclosures keep working.
+7. No recommendation, voice, nuance, bag, model, or tendency behavior changes.
+
+The audit may adjust the picker's spacing and motion only after inspecting the
+current Simulator rendering and obtaining Colt's visual approval. Do not
+freelance a new sheet, add fields, or change global design tokens.
+
+---
+
+## 7. CURRENT CADDY CALL IMPLEMENTATION SEAMS
+
+- `COLTSCADDY/Components/CaddyCallCard.swift`
+  - Owns the compact command-first layout and disclosure state.
+  - Uses `ViewThatFits` and accessibility-size stacking fallbacks.
+  - Adds a natural definite article to appropriate directional target display
+    copy without changing the stored engine decision.
+- `COLTSCADDY/Screens/ThreadView.swift`
+  - Renders the user's shot summary followed directly by `CaddyCallCard`.
+  - Requests delayed scroll-to-latest after disclosure expansion.
+  - Uses a top-trailing `safeAreaInset` for the golfer/bag button.
+- `COLTSCADDYUITests/COLTSCADDYUITests.swift`
+  - `testCompactCaddyCallMatchesApprovedCommandFirstState` is the focused
+    command-first visual regression seam.
+  - `testBagButtonNeverObscuresTopMessageInLongThread` is the bag-button
+    geometry and route regression seam.
+
+Do not change these surfaces during the outcome-picker audit unless a directly
+observed regression proves the smallest necessary correction. If scope must
+expand, stop and ask Colt first.
+
+---
+
+## 8. ARCHITECTURAL AND PRODUCT BOUNDARIES
 
 ### Deterministic decision boundary
 
 - `CaddyEngine` owns club, distance, target, safe miss, why, alternate,
   confidence, lead, and execution cue.
 - The LLM never chooses or alters a golf decision.
-- `CaddyVoiceService` still exists and is tested, but the current live
-  post-shot presentation is card-only.
-- Do not delete the voice layer merely because `ThreadView` does not render its
-  response today.
+- The iOS app contains no provider SDK or provider API key.
+- Do not delete the voice layer because the current UI is card-only.
 
 ### Product boundary
 
 18Birdies owns GPS, wind, plays-like distance, course maps, and scoring.
-COLTSCADDY must not add them.
+COLTSCADDY must not add or mention those capabilities, including placeholders.
 
 Still out of v1:
 
@@ -166,97 +251,41 @@ Still out of v1:
 - Active tendency learning
 - Conversational shot debrief
 
-`Tendency` and `CoachingCue` models exist but remain dormant. Outcome capture
-must not silently activate inference, learning, coaching, or personalization.
+All caddie-visible text must use complete grammatical sentences and normal
+punctuation.
 
 ### Scope rule
 
-One feature per loop. The next loop is only Outcome tap.
+One feature per loop. The next loop is only the compact outcome-picker visual
+audit. Do not combine it with the pending bag-button, tray, or composer audit.
 
 ---
 
-## 7. NEXT-PHASE IMPLEMENTATION SEAMS
+## 9. LAST RECORDED VERIFICATION RECEIPT
 
-Inspect these before editing:
+The latest recorded July 18 verification used an iOS 26.5 iPhone 17 Pro
+Simulator named `26.5 sim2`.
 
-- `COLTSCADDY/Models/CoreTypes.swift`
-  - `Outcome` already exists with exactly six cases:
-    `good`, `left`, `right`, `short`, `long`, `poorContact`.
-- `COLTSCADDY/Models/ShotHistory.swift`
-  - `ShotHistory` already contains `var outcome: Outcome?`.
-- `COLTSCADDY/Models/ShotHistoryStore.swift`
-  - `log(shot:decision:in:)` currently creates history without an outcome.
-- `COLTSCADDY/Components/CaddyCallCard.swift`
-  - Owns alternate/reminder disclosure state and receives `logAction`.
-  - The cyan Log result button currently fires immediately.
-- `COLTSCADDY/Screens/ThreadView.swift`
-  - `logResult(for:)` currently writes immediately, flips `call.isLogged`, and
-    disables the card action.
-- `COLTSCADDYTests/ShotHistoryStoreTests.swift`
-  - Current persistence baseline proves one history record with the correct
-    context and recommendation.
-- `COLTSCADDYUITests/COLTSCADDYUITests.swift`
-  - `testSubmittingShotRendersStructuredCaddyCallCard` is the focused UI seam.
+Recorded results at production baseline `6777494`:
 
-The smallest safe vertical slice after Colt chooses inline vs. sheet:
+- Generic Debug Simulator build: succeeded
+- Complete `COLTSCADDYTests`: 22 passed
+- Focused structured-card / outcome-picker UI test: passed
+- Dedicated compact command-first UI test: passed
+- Caddy Call design QA: passed with no actionable P0/P1/P2 gaps
+- `git diff --check`: passed before the production commits
 
-1. Tap Log result.
-2. Present exactly the six existing `Outcome` choices.
-3. Cancel/dismiss without writing anything.
-4. Selecting one choice writes exactly one `ShotHistory` with that outcome.
-5. The selected card becomes logged/disabled and cannot create a duplicate.
-6. Existing alternate and reminder disclosures keep working.
-7. No recommendation, tendency, voice, bag, or nuance behavior changes.
+Recorded limitations:
 
-Do not invent extra fields such as notes, score, club-used confirmation,
-contact sliders, or miss combinations in this loop.
+- No physical-iPhone visual pass was performed.
+- The full UI-test target was not recorded as rerun after the final compact
+  Command Strip change; the two focused UI paths are the current evidence.
+- Xcode emitted `DebuggerVersionStore` / `no debugger version` warnings during
+  focused UI runs. The recorded xcresults completed with passed tests and zero
+  failures.
 
----
-
-## 8. ACCEPTANCE CRITERIA FOR OUTCOME TAP
-
-The phase is complete only when all are true:
-
-- The six choices map one-to-one to the existing `Outcome` cases.
-- `poorContact` has a readable user-facing label such as `Poor contact` while
-  persisting the enum value unchanged.
-- No persistence occurs before a choice is selected.
-- One selection creates one history row with the correct shot, recommendation,
-  and outcome.
-- Repeated taps cannot create duplicate rows for the same card.
-- The chosen presentation fits a small iPhone, the composer, and card scroll.
-- Every control has at least a 44-point tap target and a clear accessibility
-  label/identifier.
-- Existing Caddy Call visual tokens and hierarchy remain unchanged.
-- Focused unit and UI tests cover selection and duplicate prevention.
-- `Docs/ROADMAP.md` advances its YOU ARE HERE and SINGLE NEXT ACTION together.
-- `Docs/DECISIONS.md` records the presentation choice, proof, failures, and
-  recovery path.
-
----
-
-## 9. BASELINE VERIFICATION RECEIPT
-
-The last verified July 18 run used iOS 26.5 simulator
-`674D7437-DCB2-49D0-B402-D449E06EC8CE` (`26.5 sim2`, iPhone 17 Pro).
-
-Results:
-
-- Generic Debug simulator build: `BUILD SUCCEEDED`
-- Complete `COLTSCADDYTests`: 21 passed
-- Focused structured-card UI test: 1 passed
-- Combined final result: 22 passed, 0 failed, 0 skipped
-- `git diff --check`: passed
-- Design QA: passed
-
-What was not proved:
-
-- No physical-iPhone run was performed.
-- The complete UI-test target was not rerun during the final card pass; the
-  structured-card flow was the focused UI proof.
-
-Xcode may emit `DebuggerVersionStore` / `no debugger version`. Treat it as a
-warning only when the command exits zero and `TEST SUCCEEDED` is present.
+These are historical receipts, not proof of a future working tree. Rerun the
+relevant commands before making new compile, test, or Simulator claims.
 
 Useful commands:
 
@@ -266,42 +295,47 @@ xcodebuild -project COLTSCADDY.xcodeproj -scheme COLTSCADDY \
   -destination 'generic/platform=iOS Simulator' build
 ```
 
+Discover a current concrete Simulator before running tests. Then use its UDID:
+
 ```bash
 xcodebuild -project COLTSCADDY.xcodeproj -scheme COLTSCADDY \
-  -destination 'platform=iOS Simulator,id=674D7437-DCB2-49D0-B402-D449E06EC8CE' \
+  -destination 'platform=iOS Simulator,id=<SIMULATOR_UDID>' \
   -only-testing:COLTSCADDYTests test
 ```
 
 ```bash
 xcodebuild -project COLTSCADDY.xcodeproj -scheme COLTSCADDY \
-  -destination 'platform=iOS Simulator,id=674D7437-DCB2-49D0-B402-D449E06EC8CE' \
+  -destination 'platform=iOS Simulator,id=<SIMULATOR_UDID>' \
   -only-testing:COLTSCADDYUITests/COLTSCADDYUITests/testSubmittingShotRendersStructuredCaddyCallCard \
+  -only-testing:COLTSCADDYUITests/COLTSCADDYUITests/testCompactCaddyCallMatchesApprovedCommandFirstState \
   test
 ```
-
-Re-check available simulators before reusing that ID.
 
 ---
 
 ## 10. DO NOT REDO OR REOPEN
 
-- Do not restore the stock-club lead bubble.
-- Do not restore the confidence badge.
-- Do not turn Target / Safe miss / Why into a dashboard, pills, or command grid.
-- Do not dim the card values back to the old low-contrast gray.
-- Do not expand Alternate play by default.
-- Do not replace the compact execution cue with the old paragraph.
+- Do not rebuild Outcome tap; it is complete.
+- Do not reopen inline-versus-sheet; Colt selected the compact Quick Grid
+  bottom sheet.
+- Do not restore the post-shot lead bubble or confidence badge.
+- Do not expand Alternate or reminder content by default.
+- Do not replace the compact Command Strip with the superseded tall card.
+- Do not replace or broadly rewrite the Range Finder visual system without a
+  new explicit product decision.
 - Do not move typed nuance out of `ChatInputBar`.
 - Do not duplicate the bag-button safe-area fix.
-- Do not activate tendencies from one outcome.
-- Do not change `Outcome` cases without a new product decision and migration
-  review.
+- Do not make `Outcome` optional at the logging seam.
+- Do not activate tendencies, coaching, or inference from outcomes.
+- Do not add notes, score, club-used confirmation, sliders, miss combinations,
+  or another result flow.
+- Do not change recommendation rules during a visual audit.
 
 ---
 
 ## 11. HANDOFF / COMPLETION FORMAT FOR THE NEXT CHAT
 
-After the Outcome tap loop, report:
+After the compact outcome-picker audit, report:
 
 ### Verdict
 
@@ -313,12 +347,12 @@ Only files actually changed.
 
 ### What changed
 
-Plain product language, including the chosen presentation behavior.
+Plain product language describing the approved spacing or motion adjustment.
 
 ### Verification
 
 Exact commands and actual results. Separate build, tests, simulator
-observation, physical-device observation, commit, and push.
+observation, physical-device observation, commit, push, and remote visibility.
 
 ### What to check next
 
@@ -326,8 +360,9 @@ One manual check Colt can perform in under 30 seconds.
 
 ### Risks or follow-up
 
-Unproved behavior, warnings, scope intentionally deferred, and the next roadmap
-line.
+Unproved behavior, warnings, intentionally deferred scope, and the exact next
+roadmap line.
 
-Do not call the work shipped unless the commit is visible on `origin/main` and
-the actual push output confirms it. Do not commit or push unless Colt asks.
+Every verification claim should name its evidence and the check that would
+falsify it. Do not call work shipped unless `git log origin/main` shows the
+commit after push. Do not commit or push unless Colt asks.
