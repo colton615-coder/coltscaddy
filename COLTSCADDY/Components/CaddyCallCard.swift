@@ -17,6 +17,9 @@ struct CaddyCallCard: View {
     let expansionAction: (Bool) -> Void
     let logAction: () -> Void
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     @State private var isAlternateExpanded = false
     @State private var isTipExpanded = false
 
@@ -45,37 +48,28 @@ struct CaddyCallCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.md) {
-            VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+        VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: DS.Spacing.lg) {
                 Text("CADDY CALL")
                     .font(DS.Font.caption)
                     .tracking(DS.Font.captionTracking)
                     .foregroundStyle(DS.Color.accent)
 
-                Text(club)
-                    .font(DS.Font.playCall)
-                    .foregroundStyle(DS.Color.textPrimary)
-                    .monospacedDigit()
-
-                Text(distanceText)
-                    .font(DS.Font.playDistance)
-                    .foregroundStyle(DS.Color.accent)
-                    .monospacedDigit()
+                recommendationLockup
+                targetCommand
             }
 
-            VStack(alignment: .leading, spacing: DS.Spacing.md) {
-                FieldBlock(label: "Target", value: target)
-                FieldBlock(label: "Safe miss", value: safeMiss)
-                FieldBlock(label: "Why", value: why)
+            sectionDivider
+                .padding(.vertical, DS.Spacing.lg)
 
-                if let alternate {
-                    alternateDisclosure(alternate)
-                }
+            callDetails
+
+            if let alternate {
+                sectionDivider
+                    .padding(.top, DS.Spacing.lg)
+
+                alternateDisclosure(alternate)
             }
-
-            Rectangle()
-                .fill(DS.Color.accent)
-                .frame(height: 1)
 
             if isTipExpanded {
                 VStack(alignment: .leading, spacing: DS.Spacing.sm) {
@@ -89,38 +83,15 @@ struct CaddyCallCard: View {
                         .foregroundStyle(DS.Color.textPrimary)
                         .accessibilityIdentifier("executionTip")
                 }
-                .transition(.opacity.combined(with: .move(edge: .top)))
+                .padding(.top, DS.Spacing.lg)
+                .transition(reduceMotion ? .opacity : .opacity.combined(with: .move(edge: .top)))
             }
 
-            Button(action: logAction) {
-                Text("Log result")
-                    .font(DS.Font.button)
-                    .foregroundStyle(DS.Color.accentInk)
-                    .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
-                    .background(
-                        RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
-                            .fill(DS.Color.accent)
-                    )
-            }
-            .buttonStyle(.plain)
-            .disabled(!isLogResultEnabled)
-            .opacity(isLogResultEnabled ? 1 : 0.45)
+            sectionDivider
+                .padding(.top, DS.Spacing.lg)
 
-            Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isTipExpanded.toggle()
-                }
-                expansionAction(isTipExpanded)
-            } label: {
-                HStack(spacing: DS.Spacing.sm) {
-                    Text(isTipExpanded ? "Hide reminder" : "Remind me how")
-                    Image(systemName: isTipExpanded ? "chevron.up" : "chevron.down")
-                }
-                .font(DS.Font.label)
-                .foregroundStyle(DS.Color.accent)
-                .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
-            }
-            .buttonStyle(.plain)
+            actionRail
+                .padding(.top, DS.Spacing.md)
         }
         .padding(DS.Spacing.lg)
         .background(
@@ -133,57 +104,241 @@ struct CaddyCallCard: View {
         )
     }
 
+    private var recommendationLockup: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .center, spacing: DS.Spacing.md) {
+                clubLabel
+
+                Spacer(minLength: 0)
+
+                Rectangle()
+                    .fill(DS.Color.hairline)
+                    .frame(width: 1, height: 36)
+
+                distanceLabel
+            }
+
+            VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+                clubLabel
+                distanceLabel
+            }
+        }
+    }
+
+    private var clubLabel: some View {
+        HStack(spacing: DS.Spacing.sm) {
+            Image(systemName: "figure.golf")
+                .font(.title2.weight(.medium))
+                .accessibilityHidden(true)
+
+            Text(club)
+                .font(DS.Font.playCall)
+                .lineLimit(1)
+                .minimumScaleFactor(0.72)
+                .monospacedDigit()
+        }
+        .foregroundStyle(DS.Color.textPrimary)
+    }
+
+    private var distanceLabel: some View {
+        Text(distanceText)
+            .font(DS.Font.playDistance)
+            .foregroundStyle(DS.Color.accent)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            .monospacedDigit()
+    }
+
+    private var targetCommand: some View {
+        HStack(alignment: .center, spacing: DS.Spacing.md) {
+            RoundedRectangle(cornerRadius: 1, style: .continuous)
+                .fill(DS.Color.accent)
+                .frame(width: 3)
+
+            Text(displayTarget)
+                .font(DS.Font.playTarget)
+                .foregroundStyle(DS.Color.textPrimary)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("targetCommand")
+        }
+    }
+
+    @ViewBuilder
+    private var callDetails: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DS.Spacing.lg) {
+                CompactFieldBlock(label: "Safe miss", value: safeMiss, valueIdentifier: "safeMissValue")
+                CompactFieldBlock(label: "Why", value: why, valueIdentifier: "whyValue")
+            }
+        } else {
+            HStack(alignment: .top, spacing: DS.Spacing.lg) {
+                CompactFieldBlock(label: "Safe miss", value: safeMiss, valueIdentifier: "safeMissValue")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Rectangle()
+                    .fill(DS.Color.hairline)
+                    .frame(width: 1)
+
+                CompactFieldBlock(label: "Why", value: why, valueIdentifier: "whyValue")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
     private func alternateDisclosure(_ alternate: Alternate) -> some View {
         VStack(alignment: .leading, spacing: DS.Spacing.sm) {
             Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
+                withAnimation(disclosureAnimation) {
                     isAlternateExpanded.toggle()
                 }
                 expansionAction(isAlternateExpanded)
             } label: {
                 HStack(spacing: DS.Spacing.sm) {
-                    Text("Alternate play")
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .accessibilityHidden(true)
+                    Text("Alternate")
                     Spacer(minLength: DS.Spacing.md)
-                    Image(systemName: "chevron.down")
-                        .rotationEffect(.degrees(isAlternateExpanded ? 180 : 0))
+                    Image(systemName: "chevron.right")
+                        .rotationEffect(.degrees(isAlternateExpanded ? 90 : 0))
+                        .accessibilityHidden(true)
                 }
-                .font(DS.Font.button)
-                .foregroundStyle(DS.Color.accentInk)
-                .padding(.horizontal, DS.Spacing.md)
+                .font(DS.Font.label)
+                .foregroundStyle(DS.Color.alternate)
                 .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
-                .background(
-                    RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
-                        .fill(DS.Color.alternate)
-                )
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Alternate play")
 
             if isAlternateExpanded {
                 Text(alternate.text)
                     .font(DS.Font.fieldValue)
                     .foregroundStyle(DS.Color.callDetail)
                     .accessibilityIdentifier("alternatePlay")
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .transition(reduceMotion ? .opacity : .opacity.combined(with: .move(edge: .top)))
             }
         }
     }
+
+    @ViewBuilder
+    private var actionRail: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(spacing: DS.Spacing.sm) {
+                reminderButton
+                logResultButton
+            }
+        } else {
+            HStack(spacing: DS.Spacing.md) {
+                reminderButton
+
+                Rectangle()
+                    .fill(DS.Color.hairline)
+                    .frame(width: 1, height: DS.Size.tapTarget)
+
+                logResultButton
+            }
+        }
+    }
+
+    private var reminderButton: some View {
+        Button {
+            withAnimation(disclosureAnimation) {
+                isTipExpanded.toggle()
+            }
+            expansionAction(isTipExpanded)
+        } label: {
+            HStack(spacing: DS.Spacing.sm) {
+                Image(systemName: isTipExpanded ? "bell.slash" : "bell")
+                    .accessibilityHidden(true)
+                Text(isTipExpanded ? "Hide reminder" : "Remind me")
+            }
+            .font(DS.Font.label)
+            .foregroundStyle(DS.Color.callDetail)
+            .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(isTipExpanded ? "Hide reminder" : "Remind me how")
+        .accessibilityIdentifier("reminderButton")
+    }
+
+    private var logResultButton: some View {
+        Button(action: logAction) {
+            HStack(spacing: DS.Spacing.sm) {
+                Image(systemName: "flag")
+                    .accessibilityHidden(true)
+                Text("Log result")
+            }
+            .font(DS.Font.label)
+            .foregroundStyle(DS.Color.accentInk)
+            .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
+            .background(
+                RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
+                    .fill(DS.Color.accent)
+            )
+        }
+        .buttonStyle(.plain)
+        .disabled(!isLogResultEnabled)
+        .opacity(isLogResultEnabled ? 1 : 0.45)
+        .accessibilityIdentifier("logResultButton")
+    }
+
+    private var sectionDivider: some View {
+        Rectangle()
+            .fill(DS.Color.hairline)
+            .frame(height: 1)
+    }
+
+    private var disclosureAnimation: Animation? {
+        reduceMotion ? nil : .easeOut(duration: 0.2)
+    }
+
+    private var displayTarget: String {
+        let trimmed = target.trimmingCharacters(in: .whitespacesAndNewlines)
+        let sentence = trimmed.trimmingCharacters(in: CharacterSet(charactersIn: "."))
+        let lowercasedSentence = sentence.lowercased()
+
+        if lowercasedSentence.hasPrefix("land ") {
+            return sentence
+        }
+
+        if lowercasedSentence == "safely on" {
+            return "Get it safely on"
+        }
+
+        guard let firstCharacter = sentence.first else {
+            return "Aim at the safest target"
+        }
+
+        let loweredFirstCharacter = String(firstCharacter).lowercased()
+        let normalizedSentence = "\(loweredFirstCharacter)\(sentence.dropFirst())"
+        let targetsUsingDefiniteArticle = ["widest", "cleanest", "largest", "start"]
+        let article = targetsUsingDefiniteArticle.contains {
+            normalizedSentence.hasPrefix($0)
+        } ? "the " : ""
+
+        return "Aim at \(article)\(normalizedSentence)"
+    }
 }
 
-private struct FieldBlock: View {
+private struct CompactFieldBlock: View {
     let label: String
     let value: String
-    var labelColor = DS.Color.textPrimary
+    let valueIdentifier: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.xs) {
-            Text(label)
+        VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+            Text(label.uppercased())
                 .font(DS.Font.fieldLabel)
-                .foregroundStyle(labelColor)
+                .tracking(DS.Font.captionTracking)
+                .foregroundStyle(DS.Color.textSecondary)
 
             Text(value)
                 .font(DS.Font.fieldValue)
                 .foregroundStyle(DS.Color.callDetail)
                 .monospacedDigit()
+                .accessibilityIdentifier(valueIdentifier)
         }
     }
 }

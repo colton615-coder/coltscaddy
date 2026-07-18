@@ -1,72 +1,67 @@
-# Caddy Call Design QA
+# Caddy Call Command-First Design QA
 
-- Source visual truth: `Proof/caddy-call-approved-reference.png`
-- Implementation screenshot: `Proof/caddy-call-approved-runtime.png`
-- Full-view comparison: `Proof/caddy-call-approved-comparison.png`
-- Viewport: iPhone 17 Pro simulator, 402 x 874 points, dark mode
-- State: 165-yard clean full shot; Alternate play collapsed; reminder expanded;
-  Log result enabled
+- Source visual truth: `Proof/caddy-call-command-first-reference.png`
+- Implementation screenshot: `Proof/caddy-call-command-first-runtime.png`
+- Normalized comparison: `Proof/caddy-call-command-first-comparison.png`
+- Source size: 852 x 1846 pixels
+- Runtime viewport: iPhone 17 Pro simulator, 402 x 874 points, dark mode
+- State: 450-yard tee shot with OB marked; primary recommendation collapsed;
+  Alternate and reminder collapsed; Log result enabled
 
 ## Full-view comparison evidence
 
-The normalized side-by-side confirms the selected structure and hierarchy:
-user summary, card-only recommendation, CADDY CALL label, club and distance,
-stacked Target / Safe miss / Why blocks, amber Alternate play disclosure, cyan
-divider, COMMIT TO THIS cue, full-width Log result, reminder control, and bottom
-composer. The live chat scroll prioritizes the newest card, so the old greeting
-may be outside the viewport; this is an intentional native-scroll difference,
-not pinned content from the source mock.
+The combined side-by-side keeps the complete reference and runtime screen in
+one image. The runtime matches the selected command-first structure: compact
+user summary, one Caddy Call surface, club and carry lockup, strong target
+command, split Safe miss / Why band, restrained amber Alternate disclosure,
+and a compact reminder / Log result action rail.
 
 ## Required fidelity surfaces
 
-- Fonts and typography: SF Rounded is preserved. Field headings are 21-point
-  bold; values are 17-point regular; hierarchy and wrapping remain clear.
-- Spacing and layout rhythm: the card uses 16-point inset padding, 12-point
-  outer rhythm, full-width controls, 44-point minimum targets, and continuous
-  16/14-point radii. The complete latest card and composer remain reachable.
-- Colors and visual tokens: near-black background, cool dark surface, primary
-  white, bright cool-gray details, cyan semantic accent, and amber alternate
-  match the approved direction. The removed green confidence badge does not
-  reappear.
-- Image quality and asset fidelity: there are no custom raster assets in this
-  surface. The golf figure and chevrons use native SF Symbols, matching the
-  Apple-native source language.
-- Copy and content: the stock-club lead bubble and `Medium-high` badge are gone.
-  The clean-full-shot fields read `Center green.`, `Short is fine.`, and
-  `Stock number. No need to force it.` The execution cue reads
-  `SET THE FACE  •  SET YOUR FEET  •  COMMIT`.
+- Typography: SF Rounded and semantic Dynamic Type styles preserve the source's
+  command hierarchy without fixed-size accessibility failures.
+- Spacing and density: the live card retains the source's tight vertical rhythm,
+  thin dividers, aligned two-column information band, and compact action rail.
+- Color: near-black background, cool dark card, cyan recommendation accent,
+  amber alternate action, and quiet gray detail text match the selected visual.
+- Icons: production uses native SF Symbols. `figure.golf` replaces the generated
+  custom club mark while keeping the same visual weight and alignment.
+- Copy: the dedicated fixture renders `3 Hybrid`, `200 yds`, and
+  `Aim at the widest fairway`. Engine-owned Safe miss and Why copy remain live
+  rather than being hard-coded to the mock.
 
-## Focused region comparison
+## Focused-region evidence
 
-A separate crop was not needed: the normalized full-view comparison retains
-the entire 402-point-wide card at readable resolution, including every type,
-spacing, token, copy, and control surface under review.
+A separate crop is unnecessary. The normalized 1728 x 1846 comparison keeps
+the full card readable at original reference height, including every divider,
+label, icon, and control under review.
 
 ## Findings
 
-- No actionable P0, P1, or P2 differences remain.
-- P3: Image generation rendered slightly softer radii and texture than native
-  SwiftUI. The implementation intentionally uses flat semantic colors and
-  continuous native shapes instead of reproducing generated texture.
+- No actionable P0, P1, or P2 visual differences remain.
+- P3: the production user summary uses the app's existing sentence format
+  instead of the mock's abbreviated dot-separated format.
+- P3: actual deterministic engine copy is slightly longer than the illustrative
+  mock copy in Safe miss and Why.
+- P3: the native golf figure differs from ImageGen's custom club mark by design;
+  no new raster or third-party icon asset was introduced.
 
-## Comparison history
+## Patches applied during QA
 
-1. First runtime capture: `Hide reminder` was crowded below the visible card
-   edge after expansion. Fix: delay the latest-card scroll until the disclosure
-   animation finishes.
-2. Second runtime capture: all controls were visible, but scrolled conversation
-   content could draw in the status-bar region. Fix: clip the conversation feed
-   to its bounds and tighten only the card's outer rhythm from 16 to 12 points.
-3. Final runtime capture: latest card and composer are visible; card structure,
-   typography, tokens, copy, and interaction controls match the approved target
-   with no actionable P0/P1/P2 findings.
+1. Replaced the tall stacked card with the selected command-first composition.
+2. Added the missing article so the target reads `Aim at the widest fairway`.
+3. Shortened the visible disclosure label from `Alternate play` to `Alternate`
+   while retaining the descriptive accessibility label.
+4. Recaptured the runtime and regenerated the combined comparison after both
+   corrections.
 
 ## Interaction verification
 
-- Submitted the 165-yard shot from the shot tray.
-- Confirmed no post-shot lead bubble and no confidence badge.
-- Expanded and collapsed Alternate play.
-- Expanded and collapsed Remind me how.
-- Confirmed Log result remained visible, hittable, and persisted the shot once.
+- Confirmed the dedicated 450-yard tee-shot fixture renders `3 Hybrid`,
+  `200 yds`, the target command, Safe miss, Why, and both action controls.
+- Confirmed the existing submitted-shot flow still renders the structured card,
+  expands its disclosures, and keeps Log result hittable.
+- Confirmed the card provides stacked fallbacks at accessibility Dynamic Type
+  sizes and suppresses movement when Reduce Motion is enabled.
 
 final result: passed

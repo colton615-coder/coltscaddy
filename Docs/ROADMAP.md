@@ -2,8 +2,8 @@
 
 ## SINGLE NEXT ACTION
 
-Phase 5 final screen-by-screen visual audit — spacing and motion across the
-latest Caddy Call, outcome picker, bag button, tray, and composer.
+Continue the Phase 5 screen-by-screen visual audit with the compact outcome
+picker's spacing and motion.
 
 ---
 
@@ -55,11 +55,12 @@ motion audit now resumes after the completed outcome-tap loop.
 
 1. **5.1 — Lock Range Finder tokens in Theme.swift.** ✅ DONE
 2. **5.2 — Polish the Caddy Call card layout hierarchy.** ✅ DONE
-   - July 18 refinement keeps the original Target / Safe miss / Why stack,
-     increases heading weight and size, brightens the values, and shortens the
-     engine-owned display copy without changing recommendation rules.
-   - The approved reference, verified runtime, and side-by-side comparison are
-     in `Proof/caddy-call-approved-*.png`.
+   - July 18 final refinement uses the selected command-first layout: compact
+     club/carry lockup, target command, split Safe miss / Why band, restrained
+     alternate disclosure, and a compact action rail. Recommendation rules are
+     unchanged.
+   - The selected reference, verified runtime, and side-by-side comparison are
+     in `Proof/caddy-call-command-first-*.png`.
 3. **5.3 — Stop the caddie bubble from repeating the Caddy Call card.** ✅ DONE
    - Shot submission now renders the user's summary followed directly by the
      Caddy Call card. The initial greeting remains; the post-shot lead bubble
@@ -69,7 +70,10 @@ motion audit now resumes after the completed outcome-tap loop.
 4. **Keep the golfer/bag button clear of thread content.** ✅ DONE
    - `ThreadView` now uses a top-trailing safe-area inset that reserves real
      layout space while keeping the existing button appearance and route.
-5. **Final spacing and motion polish.** 👉 NEXT
+5. **Final spacing and motion polish.** 👉 IN PROGRESS
+   - Caddy Call command-first audit: ✅ DONE
+   - Compact outcome picker audit: 👉 NEXT
+   - Bag button, tray, and composer audit: pending
 
 ## Phase 6 — v2 and beyond (do NOT start any of this)
 - Activate tendency learning behavior (lifecycle already modeled)

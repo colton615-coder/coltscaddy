@@ -19,11 +19,12 @@ enum DS {
     }
 
     enum Font {
-        static let playCall = SwiftUI.Font.system(size: Size.playCall, weight: .semibold, design: .rounded)
+        static let playCall = SwiftUI.Font.system(.title, design: .rounded, weight: .semibold)
         static let screenTitle = SwiftUI.Font.system(size: Size.screenTitle, weight: .semibold, design: .rounded)
-        static let playDistance = SwiftUI.Font.system(size: Size.playDistance, weight: .semibold, design: .rounded)
-        static let fieldLabel = SwiftUI.Font.system(size: Size.fieldLabel, weight: .bold, design: .rounded)
-        static let fieldValue = SwiftUI.Font.system(size: Size.fieldValue, weight: .regular, design: .rounded)
+        static let playDistance = SwiftUI.Font.system(.title2, design: .rounded, weight: .semibold)
+        static let playTarget = SwiftUI.Font.system(.title2, design: .rounded, weight: .semibold)
+        static let fieldLabel = SwiftUI.Font.system(.caption, design: .rounded, weight: .bold)
+        static let fieldValue = SwiftUI.Font.system(.body, design: .rounded, weight: .medium)
         static let sectionLabel = SwiftUI.Font.system(size: Size.sectionLabel, weight: .bold, design: .rounded)
         static let commitCue = SwiftUI.Font.system(size: Size.commitCue, weight: .semibold, design: .rounded)
         static let button = SwiftUI.Font.system(size: Size.button, weight: .semibold, design: .rounded)
@@ -35,11 +36,7 @@ enum DS {
         static let captionTracking = Size.caption * 0.12
 
         private enum Size {
-            static let playCall: CGFloat = 44
             static let screenTitle: CGFloat = 26
-            static let playDistance: CGFloat = 26
-            static let fieldLabel: CGFloat = 21
-            static let fieldValue: CGFloat = 17
             static let sectionLabel: CGFloat = 15
             static let commitCue: CGFloat = 15
             static let button: CGFloat = 17

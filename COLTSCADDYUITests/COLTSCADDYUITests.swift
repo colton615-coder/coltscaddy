@@ -23,6 +23,27 @@ final class COLTSCADDYUITests: XCTestCase {
     }
 
     @MainActor
+    func testCompactCaddyCallMatchesApprovedCommandFirstState() throws {
+        let app = XCUIApplication()
+        app.launchArguments.append("-UITestCompactCaddyCall")
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["CADDY CALL"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["3 Hybrid"].exists)
+        XCTAssertTrue(app.staticTexts["200 yds"].exists)
+        XCTAssertEqual(app.staticTexts["targetCommand"].label, "Aim at the widest fairway")
+        XCTAssertEqual(app.staticTexts["safeMissValue"].label, "Away from OB. Stay in bounds.")
+        XCTAssertTrue(app.buttons["Alternate play"].isHittable)
+        XCTAssertTrue(app.buttons["Remind me how"].isHittable)
+        XCTAssertTrue(app.buttons["Log result"].isHittable)
+
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "Approved Compact Command-First Caddy Call"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
     func testSubmittingShotRendersStructuredCaddyCallCard() throws {
         let app = XCUIApplication()
         app.launch()
@@ -41,12 +62,17 @@ final class COLTSCADDYUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["7 Iron"].exists)
         XCTAssertTrue(app.staticTexts["165 yds"].exists)
         XCTAssertFalse(app.staticTexts["Medium-high"].exists)
-        XCTAssertTrue(app.staticTexts["Target"].exists)
-        XCTAssertTrue(app.staticTexts["Center green."].exists)
-        XCTAssertTrue(app.staticTexts["Safe miss"].exists)
-        XCTAssertTrue(app.staticTexts["Short is fine."].exists)
-        XCTAssertTrue(app.staticTexts["Why"].exists)
-        XCTAssertTrue(app.staticTexts["Stock number. No need to force it."].exists)
+        let targetCommand = app.staticTexts["targetCommand"]
+        let safeMissValue = app.staticTexts["safeMissValue"]
+        let whyValue = app.staticTexts["whyValue"]
+        XCTAssertEqual(targetCommand.label, "Aim at center green")
+        XCTAssertEqual(safeMissValue.label, "Short is fine.")
+        XCTAssertEqual(whyValue.label, "Stock number. No need to force it.")
+
+        let collapsedCardAttachment = XCTAttachment(screenshot: app.screenshot())
+        collapsedCardAttachment.name = "Compact Caddy Call Collapsed"
+        collapsedCardAttachment.lifetime = .keepAlways
+        add(collapsedCardAttachment)
 
         let alternateButton = app.buttons["Alternate play"]
         let alternatePlay = app.staticTexts["8 Iron to the front number."]

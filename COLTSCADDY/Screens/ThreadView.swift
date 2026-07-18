@@ -17,6 +17,29 @@ struct ThreadView: View {
 
     private static var initialMessages: [ThreadMessage] {
 #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-UITestCompactCaddyCall") {
+            let shot = CaddyShotInput(
+                shotType: .tee,
+                lie: .tee,
+                trouble: [.ob],
+                distanceYards: 450
+            )
+            let bag = ProfileSeeder.defaultBag.map {
+                CaddyBagClub(name: $0.name, carryYards: $0.carryYards)
+            }
+            let decision = CaddyEngine.recommend(for: shot, bag: bag)
+
+            return [
+                ThreadMessage(
+                    content: .text(
+                        "450 yards, tee shot, trouble marked: ob.",
+                        sender: .me
+                    )
+                ),
+                ThreadMessage(content: .caddyCall(CaddyCallItem(shot: shot, decision: decision)))
+            ]
+        }
+
         if ProcessInfo.processInfo.arguments.contains("-UITestLongThread") {
             return (1...8).map { index in
                 ThreadMessage(

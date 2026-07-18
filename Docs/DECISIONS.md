@@ -1,5 +1,52 @@
 # Decisions
 
+## 2026-07-18 — Caddy Call uses the compact Command Strip direction
+
+### Decisions locked
+
+- Colt rejected the previous tall card as bulky and selected displayed Proposal
+  2, the compact Command Strip, from three screenshot-grounded visual options.
+- The selected visual source is
+  `Proof/caddy-call-command-first-reference.png`. It supersedes the earlier
+  Caddy Call layout reference while preserving the locked Range Finder palette,
+  SF Rounded voice, and native control behavior.
+- The recommendation is command-first: club and carry share one hero row, the
+  target is the strongest instruction, Safe miss and Why share a compact band,
+  Alternate is restrained amber text, and reminder / Log result share one
+  action rail.
+- Existing disclosure behavior, result logging, accessibility labels, engine
+  ownership, persistence, and recommendation rules remain unchanged. The
+  separate Full + Tee routing defect is not part of this visual loop.
+
+### Implemented and proved
+
+- `CaddyCallCard` now uses semantic Dynamic Type styles, accessibility-size
+  stacking fallbacks, 44-point actions, and Reduce Motion-aware disclosure
+  transitions.
+- The target display copy adds a natural definite article for directional
+  phrases such as `Aim at the widest fairway`; the engine's stored decision is
+  unchanged.
+- A DEBUG-only launch fixture renders the reported 450-yard tee-shot / OB state
+  through the real engine for repeatable visual QA. The fixture produces the
+  safe `3 Hybrid` / `200 yds` recommendation and is not reachable in release.
+- The generic iOS Simulator build succeeded. The full `COLTSCADDYTests` target
+  passed 22 tests. The final simulator rerun passed both the existing structured
+  card UI test and the dedicated command-first visual UI test.
+- Runtime proof is `Proof/caddy-call-command-first-runtime.png`; the normalized
+  combined comparison is `Proof/caddy-call-command-first-comparison.png`; the
+  fidelity record is `design-qa.md` and reports no actionable P0/P1/P2 gaps.
+
+### Tried, warning, and recovery path
+
+- The first comparison exposed two small fidelity misses: the target omitted
+  `the`, and the visible disclosure label was longer than the reference. Both
+  were corrected before the final capture.
+- Focused UI runs emitted Xcode's `DebuggerVersionStore` / `no debugger version`
+  warning. The xcresult completed with both tests passed and zero failures.
+- No physical-device visual pass has been performed. If this layout regresses,
+  rerun `testCompactCaddyCallMatchesApprovedCommandFirstState` and inspect the
+  exported attachment against the selected reference.
+
 ## 2026-07-18 — Outcome tap uses the compact Quick Grid sheet
 
 ### Decisions locked
