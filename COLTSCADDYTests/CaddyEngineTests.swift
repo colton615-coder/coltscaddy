@@ -85,7 +85,11 @@ struct CaddyEngineTests {
         #expect(decision.play.contains("165"))
         #expect(decision.club == "7 Iron")
         #expect(decision.distanceText == "165 yds")
+        #expect(decision.target == "Center green.")
+        #expect(decision.safeMiss == "Short is fine.")
+        #expect(decision.why == "Stock number. No need to force it.")
         #expect(decision.alternate.text.contains("8 Iron"))
+        #expect(CaddyEngine.executionTip(for: .full) == "SET THE FACE  •  SET YOUR FEET  •  COMMIT")
     }
 
     @Test func invalidDistanceStillProducesLowConfidenceCall() {

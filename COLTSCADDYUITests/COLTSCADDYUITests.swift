@@ -36,18 +36,29 @@ final class COLTSCADDYUITests: XCTestCase {
 
         app.buttons["Ask the caddie"].tap()
 
-        XCTAssertTrue(app.staticTexts["This is a stock club for you."].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["CADDY CALL"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["This is a stock club for you."].exists)
         XCTAssertTrue(app.staticTexts["7 Iron"].exists)
         XCTAssertTrue(app.staticTexts["165 yds"].exists)
-        XCTAssertTrue(app.staticTexts["Medium-high"].exists)
+        XCTAssertFalse(app.staticTexts["Medium-high"].exists)
         XCTAssertTrue(app.staticTexts["Target"].exists)
+        XCTAssertTrue(app.staticTexts["Center green."].exists)
         XCTAssertTrue(app.staticTexts["Safe miss"].exists)
+        XCTAssertTrue(app.staticTexts["Short is fine."].exists)
         XCTAssertTrue(app.staticTexts["Why"].exists)
-        XCTAssertTrue(app.staticTexts["Alternate"].exists)
+        XCTAssertTrue(app.staticTexts["Stock number. No need to force it."].exists)
+
+        let alternateButton = app.buttons["Alternate play"]
+        let alternatePlay = app.staticTexts["8 Iron to the front number."]
+        XCTAssertTrue(alternateButton.exists)
+        XCTAssertFalse(alternatePlay.exists)
+        alternateButton.tap()
+        XCTAssertTrue(alternatePlay.waitForExistence(timeout: 2))
+        alternateButton.tap()
+        XCTAssertFalse(alternatePlay.exists)
 
         let executionTip = app.staticTexts[
-            "Set the face, settle your feet, and make the same committed swing you use on the range."
+            "SET THE FACE  •  SET YOUR FEET  •  COMMIT"
         ]
         let remindButton = app.buttons["Remind me how"]
         XCTAssertTrue(remindButton.exists)
@@ -56,19 +67,23 @@ final class COLTSCADDYUITests: XCTestCase {
         remindButton.tap()
 
         XCTAssertTrue(executionTip.waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["COMMIT TO THIS"].exists)
 
         let logResultButton = app.buttons["Log result"]
         XCTAssertTrue(logResultButton.exists)
         XCTAssertTrue(logResultButton.isHittable)
         XCTAssertTrue(logResultButton.isEnabled)
 
+        let hideReminderButton = app.buttons["Hide reminder"]
+        XCTAssertTrue(hideReminderButton.waitForExistence(timeout: 2))
+        XCTAssertTrue(hideReminderButton.isHittable)
+
         let expandedTipAttachment = XCTAttachment(screenshot: app.screenshot())
         expandedTipAttachment.name = "Expanded Full-Shot Execution Tip"
         expandedTipAttachment.lifetime = .keepAlways
         add(expandedTipAttachment)
 
-        XCTAssertTrue(remindButton.isHittable)
-        remindButton.tap()
+        hideReminderButton.tap()
         XCTAssertFalse(executionTip.exists)
 
         logResultButton.tap()

@@ -53,13 +53,13 @@ enum CaddyEngine {
     static func executionTip(for shotType: ShotType) -> String {
         switch shotType {
         case .full:
-            "Set the face, settle your feet, and make the same committed swing you use on the range."
+            "SET THE FACE  •  SET YOUR FEET  •  COMMIT"
         case .chip:
-            "Pick the landing spot, set the handle, and keep turning through the strike. No last-second rescue mission."
+            "PICK THE SPOT  •  SET THE HANDLE  •  TURN THROUGH"
         case .putt:
-            "Set the face first, then match the stroke to the pace you chose. Once you are over it, stop negotiating."
+            "SET THE FACE  •  MATCH THE PACE  •  COMMIT"
         case .tee:
-            "Build the same setup every time, finish your alignment, and swing through the picture. Steering it is not a plan."
+            "BUILD THE SETUP  •  FINISH ALIGNMENT  •  SWING THROUGH"
         }
     }
 
@@ -114,9 +114,9 @@ private extension CaddyEngine {
                 play: "\(club.name) to \(club.carryYards)",
                 club: club.name,
                 distanceText: distanceText(for: club.carryYards),
-                target: "Aim at the widest part of the fairway.",
+                target: "Widest fairway.",
                 safeMiss: safeMiss(for: trouble, fallback: "Short grass beats extra yards here."),
-                why: "Penalty trouble is marked on a tee shot, so the call is the most in-play club instead of driver.",
+                why: "Penalty marked. Keep driver in the bag.",
                 confidence: .mediumHigh,
                 alternate: .init(
                     type: "aggressive",
@@ -132,9 +132,9 @@ private extension CaddyEngine {
             play: "\(club.name) to \(club.carryYards)",
             club: club.name,
             distanceText: distanceText(for: club.carryYards),
-            target: "Favor the center of the landing area.",
-            safeMiss: "Either side is playable; make a committed swing.",
-            why: "No penalty trouble is marked, so driver is allowed.",
+            target: "Center landing area.",
+            safeMiss: "Either side is playable.",
+            why: "No penalty marked. Driver is clear.",
             confidence: .high,
             alternate: .init(type: "safer", text: "\(safeTeeClub(from: bag).name) if the landing area looks tighter than entered.")
         )
@@ -153,9 +153,9 @@ private extension CaddyEngine {
                 play: "\(club.name), splash it on",
                 club: club.name,
                 distanceText: distanceText(for: input.distanceYards),
-                target: "Land it safely on the green.",
-                safeMiss: "Long is better than leaving it in the bunker.",
-                why: "Sand takes putter and bump-and-run out of the default plan.",
+                target: "Safely on.",
+                safeMiss: "Long beats staying in sand.",
+                why: "Sand rules out putter and bump-and-run.",
                 confidence: .medium,
                 alternate: .init(type: "safer", text: "Take enough sand and guarantee the ball exits.")
             )
@@ -167,9 +167,9 @@ private extension CaddyEngine {
                 play: "Putter from off the green",
                 club: "Putter",
                 distanceText: distanceText(for: input.distanceYards),
-                target: "Roll it on your start line.",
-                safeMiss: "Past the hole is fine; do not stub it short.",
-                why: "For short chips, the lowest-loft option that works is the default.",
+                target: "Start line.",
+                safeMiss: "Past is fine. Do not stub it.",
+                why: "Use the lowest-loft option that works.",
                 confidence: .high,
                 alternate: .init(type: "middle", text: "Bump-and-run with \(bumpAndRunClub(from: bag).name) if the fringe is too uneven.")
             )
@@ -182,9 +182,9 @@ private extension CaddyEngine {
             play: "\(club.name) bump-and-run",
             club: club.name,
             distanceText: distanceText(for: input.distanceYards),
-            target: "Land it early and let it roll.",
-            safeMiss: "Leave the next one uphill if you miss.",
-            why: "The chip rule favors low loft first. The 60-degree is not the default.",
+            target: "Land it early.",
+            safeMiss: "Uphill next.",
+            why: "Low loft first. No default 60-degree.",
             confidence: .mediumHigh,
             alternate: .init(type: "lofted", text: "\(highestLoftWedge(from: bag).name) only when you must carry something.")
         )
@@ -196,9 +196,9 @@ private extension CaddyEngine {
             play: "Putter",
             club: "Putter",
             distanceText: distanceText(for: input.distanceYards),
-            target: "Start it on your intended line.",
-            safeMiss: "Speed first; leave a simple comeback.",
-            why: "This is a putt, so the caddie commits to the putter.",
+            target: "Start line.",
+            safeMiss: "Speed first. Easy comeback.",
+            why: "It is a putt. Commit to the putter.",
             confidence: input.distanceYards > 0 ? .high : .low,
             alternate: .init(type: "lag", text: "Die it near the hole if make pace brings three-putt risk.")
         )
@@ -217,9 +217,9 @@ private extension CaddyEngine {
                 play: "Advance it to \(bailout.carryYards) with \(bailout.name)",
                 club: bailout.name,
                 distanceText: distanceText(for: bailout.carryYards),
-                target: "Pick the cleanest fairway number.",
+                target: "Cleanest fairway number.",
                 safeMiss: safeMiss(for: trouble, fallback: "Short and in play is the win."),
-                why: "Bad lies and marked trouble are where hero recoveries make big numbers. A full-wedge number is the win.",
+                why: "Bad lie or trouble marked. Reset to a full-wedge number.",
                 confidence: .medium,
                 alternate: .init(type: "safer", text: "Punch out sideways if the line is blocked.")
             )
@@ -232,9 +232,9 @@ private extension CaddyEngine {
             play: "\(club.name) to \(club.carryYards)",
             club: club.name,
             distanceText: distanceText(for: club.carryYards),
-            target: "Aim center green.",
-            safeMiss: "Short side is not worth chasing; take the middle.",
-            why: "Clean lie with no marked trouble, so the call is the bag number rounded toward safety.",
+            target: "Center green.",
+            safeMiss: "Short is fine.",
+            why: "Stock number. No need to force it.",
             confidence: .mediumHigh,
             alternate: .init(type: "safer", text: "\(shorterClub(than: club, in: bag)?.name ?? club.name) to the front number.")
         )
@@ -338,15 +338,15 @@ private extension CaddyEngine {
 
     static func safeMiss(for trouble: Set<Trouble>, fallback: String) -> String {
         if trouble.contains(.water) {
-            return "Miss away from the water, even if that means short."
+            return "Away from water. Short is fine."
         }
 
         if trouble.contains(.ob) {
-            return "Miss away from OB. In bounds is the whole job."
+            return "Away from OB. Stay in bounds."
         }
 
         if trouble.contains(.trees) {
-            return "Miss where the next swing is clear of the trees."
+            return "Clear of the trees."
         }
 
         if trouble.contains(.bunker) {
@@ -362,9 +362,9 @@ private extension CaddyEngine {
             play: "Take the safest playable club",
             club: "Take the safest playable club",
             distanceText: distanceText(for: 0),
-            target: "Choose the largest safe target.",
+            target: "Largest safe target.",
             safeMiss: "Keep it in play.",
-            why: "The distance is missing or invalid, so confidence drops but the caddie still commits.",
+            why: "Distance missing. Commit to the safest playable club.",
             confidence: .low,
             alternate: .init(type: "reset", text: "Advance to a comfortable wedge number.")
         )

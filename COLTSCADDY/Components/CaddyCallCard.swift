@@ -11,13 +11,13 @@ struct CaddyCallCard: View {
     let target: String
     let safeMiss: String
     let why: String
-    let confidence: String
     let alternate: Alternate?
     let executionTip: String
     let isLogResultEnabled: Bool
-    let tipExpansionAction: (Bool) -> Void
+    let expansionAction: (Bool) -> Void
     let logAction: () -> Void
 
+    @State private var isAlternateExpanded = false
     @State private var isTipExpanded = false
 
     init(
@@ -26,11 +26,10 @@ struct CaddyCallCard: View {
         target: String,
         safeMiss: String,
         why: String,
-        confidence: String,
         alternate: Alternate? = nil,
         executionTip: String,
         isLogResultEnabled: Bool = true,
-        tipExpansionAction: @escaping (Bool) -> Void = { _ in },
+        expansionAction: @escaping (Bool) -> Void = { _ in },
         logAction: @escaping () -> Void = {}
     ) {
         self.club = club
@@ -38,27 +37,20 @@ struct CaddyCallCard: View {
         self.target = target
         self.safeMiss = safeMiss
         self.why = why
-        self.confidence = confidence
         self.alternate = alternate
         self.executionTip = executionTip
         self.isLogResultEnabled = isLogResultEnabled
-        self.tipExpansionAction = tipExpansionAction
+        self.expansionAction = expansionAction
         self.logAction = logAction
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.lg) {
+        VStack(alignment: .leading, spacing: DS.Spacing.md) {
             VStack(alignment: .leading, spacing: DS.Spacing.sm) {
-                HStack(alignment: .center) {
-                    Text("CADDY CALL")
-                        .font(DS.Font.caption)
-                        .tracking(DS.Font.captionTracking)
-                        .foregroundStyle(DS.Color.accent)
-
-                    Spacer(minLength: DS.Spacing.md)
-
-                    ConfidenceBadge(text: confidence)
-                }
+                Text("CADDY CALL")
+                    .font(DS.Font.caption)
+                    .tracking(DS.Font.captionTracking)
+                    .foregroundStyle(DS.Color.accent)
 
                 Text(club)
                     .font(DS.Font.playCall)
@@ -77,32 +69,58 @@ struct CaddyCallCard: View {
                 FieldBlock(label: "Why", value: why)
 
                 if let alternate {
-                    Rectangle()
-                        .fill(DS.Color.hairline)
-                        .frame(height: 1)
-
-                    FieldBlock(label: "Alternate", value: alternate.text, labelColor: DS.Color.alternate)
+                    alternateDisclosure(alternate)
                 }
             }
+
+            Rectangle()
+                .fill(DS.Color.accent)
+                .frame(height: 1)
 
             if isTipExpanded {
-                Text(executionTip)
-                    .font(DS.Font.body)
-                    .foregroundStyle(DS.Color.textSecondary)
-                    .accessibilityIdentifier("executionTip")
+                VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+                    Text("COMMIT TO THIS")
+                        .font(DS.Font.sectionLabel)
+                        .tracking(DS.Font.captionTracking)
+                        .foregroundStyle(DS.Color.accent)
+
+                    Text(executionTip)
+                        .font(DS.Font.commitCue)
+                        .foregroundStyle(DS.Color.textPrimary)
+                        .accessibilityIdentifier("executionTip")
+                }
+                .transition(.opacity.combined(with: .move(edge: .top)))
             }
 
-            HStack(spacing: DS.Spacing.sm) {
-                quietButton("Remind me how") {
-                    isTipExpanded.toggle()
-                    tipExpansionAction(isTipExpanded)
-                }
-                Text("·")
-                    .font(DS.Font.label)
-                    .foregroundStyle(DS.Color.textTertiary)
-                quietButton("Log result", action: logAction)
-                    .disabled(!isLogResultEnabled)
+            Button(action: logAction) {
+                Text("Log result")
+                    .font(DS.Font.button)
+                    .foregroundStyle(DS.Color.accentInk)
+                    .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
+                    .background(
+                        RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
+                            .fill(DS.Color.accent)
+                    )
             }
+            .buttonStyle(.plain)
+            .disabled(!isLogResultEnabled)
+            .opacity(isLogResultEnabled ? 1 : 0.45)
+
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isTipExpanded.toggle()
+                }
+                expansionAction(isTipExpanded)
+            } label: {
+                HStack(spacing: DS.Spacing.sm) {
+                    Text(isTipExpanded ? "Hide reminder" : "Remind me how")
+                    Image(systemName: isTipExpanded ? "chevron.up" : "chevron.down")
+                }
+                .font(DS.Font.label)
+                .foregroundStyle(DS.Color.accent)
+                .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
+            }
+            .buttonStyle(.plain)
         }
         .padding(DS.Spacing.lg)
         .background(
@@ -115,30 +133,39 @@ struct CaddyCallCard: View {
         )
     }
 
-    private func quietButton(_ title: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(title)
-                .font(DS.Font.label)
-                .foregroundStyle(DS.Color.textSecondary)
-                .frame(minHeight: DS.Size.tapTarget)
+    private func alternateDisclosure(_ alternate: Alternate) -> some View {
+        VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isAlternateExpanded.toggle()
+                }
+                expansionAction(isAlternateExpanded)
+            } label: {
+                HStack(spacing: DS.Spacing.sm) {
+                    Text("Alternate play")
+                    Spacer(minLength: DS.Spacing.md)
+                    Image(systemName: "chevron.down")
+                        .rotationEffect(.degrees(isAlternateExpanded ? 180 : 0))
+                }
+                .font(DS.Font.button)
+                .foregroundStyle(DS.Color.accentInk)
+                .padding(.horizontal, DS.Spacing.md)
+                .frame(maxWidth: .infinity, minHeight: DS.Size.tapTarget)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
+                        .fill(DS.Color.alternate)
+                )
+            }
+            .buttonStyle(.plain)
+
+            if isAlternateExpanded {
+                Text(alternate.text)
+                    .font(DS.Font.fieldValue)
+                    .foregroundStyle(DS.Color.callDetail)
+                    .accessibilityIdentifier("alternatePlay")
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
         }
-        .buttonStyle(.plain)
-    }
-}
-
-private struct ConfidenceBadge: View {
-    let text: String
-
-    var body: some View {
-        Text(text)
-            .font(DS.Font.badge)
-            .foregroundStyle(DS.Color.confidence)
-            .padding(.horizontal, DS.Spacing.sm)
-            .padding(.vertical, DS.Spacing.xs)
-            .background(
-                RoundedRectangle(cornerRadius: DS.Radius.button, style: .continuous)
-                    .fill(DS.Color.confidenceFill)
-            )
     }
 }
 
@@ -155,7 +182,7 @@ private struct FieldBlock: View {
 
             Text(value)
                 .font(DS.Font.fieldValue)
-                .foregroundStyle(DS.Color.textSecondary)
+                .foregroundStyle(DS.Color.callDetail)
                 .monospacedDigit()
         }
     }
@@ -165,11 +192,10 @@ private struct FieldBlock: View {
     CaddyCallCard(
         club: "7 Iron",
         distanceText: "165 yds",
-        target: "Start it at the right-center of the green.",
-        safeMiss: "Short left leaves the easiest up-and-down.",
-        why: "The fairway lie gives you enough control to favor the center and avoid the long-right bunker.",
-        confidence: "Medium-high",
-        alternate: .init(type: "middle", text: "Aim center green and take the safer two-putt path."),
+        target: "Center green.",
+        safeMiss: "Short is fine.",
+        why: "Stock number. No need to force it.",
+        alternate: .init(type: "safer", text: "8 Iron to the front number."),
         executionTip: CaddyEngine.executionTip(for: .full)
     )
     .padding(DS.Spacing.xl)

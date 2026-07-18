@@ -8,6 +8,7 @@ enum DS {
         static let surfaceBubbleMe = SwiftUI.Color(hex: 0x1D2A31)
         static let hairline = SwiftUI.Color.rgba(red: 255, green: 255, blue: 255, alpha: 0.10)
         static let textPrimary = SwiftUI.Color(hex: 0xF5F7F8)
+        static let callDetail = SwiftUI.Color(hex: 0xD4DADF)
         static let textSecondary = SwiftUI.Color(hex: 0x8A949B)
         static let textTertiary = SwiftUI.Color(hex: 0x5C666D)
         static let accent = SwiftUI.Color(hex: 0x4CC9F0)
@@ -21,8 +22,11 @@ enum DS {
         static let playCall = SwiftUI.Font.system(size: Size.playCall, weight: .semibold, design: .rounded)
         static let screenTitle = SwiftUI.Font.system(size: Size.screenTitle, weight: .semibold, design: .rounded)
         static let playDistance = SwiftUI.Font.system(size: Size.playDistance, weight: .semibold, design: .rounded)
-        static let fieldLabel = SwiftUI.Font.system(size: Size.fieldLabel, weight: .semibold, design: .rounded)
+        static let fieldLabel = SwiftUI.Font.system(size: Size.fieldLabel, weight: .bold, design: .rounded)
         static let fieldValue = SwiftUI.Font.system(size: Size.fieldValue, weight: .regular, design: .rounded)
+        static let sectionLabel = SwiftUI.Font.system(size: Size.sectionLabel, weight: .bold, design: .rounded)
+        static let commitCue = SwiftUI.Font.system(size: Size.commitCue, weight: .semibold, design: .rounded)
+        static let button = SwiftUI.Font.system(size: Size.button, weight: .semibold, design: .rounded)
         static let caddieSpeak = SwiftUI.Font.system(size: Size.caddieSpeak, weight: .regular, design: .rounded)
         static let body = SwiftUI.Font.system(size: Size.body, weight: .regular, design: .rounded)
         static let label = SwiftUI.Font.system(size: Size.label, weight: .medium, design: .rounded)
@@ -34,8 +38,11 @@ enum DS {
             static let playCall: CGFloat = 44
             static let screenTitle: CGFloat = 26
             static let playDistance: CGFloat = 26
-            static let fieldLabel: CGFloat = 19
-            static let fieldValue: CGFloat = 15
+            static let fieldLabel: CGFloat = 21
+            static let fieldValue: CGFloat = 17
+            static let sectionLabel: CGFloat = 15
+            static let commitCue: CGFloat = 15
+            static let button: CGFloat = 17
             static let caddieSpeak: CGFloat = 16
             static let body: CGFloat = 15
             static let label: CGFloat = 14

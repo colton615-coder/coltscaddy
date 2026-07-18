@@ -31,7 +31,9 @@ Finder color and typography direction.
    CaddyCallCard from DesignSystem/ to Components/. ✅ DONE
 6. Log result flow: "Log result" on the card writes a ShotHistory record. ✅ DONE
 7. Provider-neutral voice layer: engine decision in, caddie-voiced copy out,
-   with offline flat-wording fallback. ✅ DONE (backend implementation pending)
+   with offline flat-wording fallback. ✅ DONE (backend implementation pending;
+   retained for future conversational surfaces, while the live shot response is
+   currently card-only)
 
 ## v1 scope gap — ChatInputBar nuance path ✅ DONE
 
@@ -53,7 +55,17 @@ motion audit resumes after the outcome-tap loop.
 
 1. **5.1 — Lock Range Finder tokens in Theme.swift.** ✅ DONE
 2. **5.2 — Polish the Caddy Call card layout hierarchy.** ✅ DONE
+   - July 18 refinement keeps the original Target / Safe miss / Why stack,
+     increases heading weight and size, brightens the values, and shortens the
+     engine-owned display copy without changing recommendation rules.
+   - The approved reference, verified runtime, and side-by-side comparison are
+     in `Proof/caddy-call-approved-*.png`.
 3. **5.3 — Stop the caddie bubble from repeating the Caddy Call card.** ✅ DONE
+   - Shot submission now renders the user's summary followed directly by the
+     Caddy Call card. The initial greeting remains; the post-shot lead bubble
+     and confidence badge are not rendered.
+   - Alternate play is an amber disclosure. Remind me how expands inline to a
+     compact COMMIT TO THIS cue above the full-width Log result action.
 4. **Keep the golfer/bag button clear of thread content.** ✅ DONE
    - `ThreadView` now uses a top-trailing safe-area inset that reserves real
      layout space while keeping the existing button appearance and route.

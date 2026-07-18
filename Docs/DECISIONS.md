@@ -1,5 +1,64 @@
 # Decisions
 
+## 2026-07-18 — Approved card-only Caddy Call refinement
+
+### Decisions locked
+
+- The approved visual source is
+  `Proof/caddy-call-approved-reference.png`. The Caddy Call keeps the original
+  stacked information structure; it is not a dashboard, command grid, or set
+  of pills.
+- After a shot submission, the user's summary is followed directly by the
+  Caddy Call card. The separate post-shot caddie lead bubble is removed from
+  the live thread. The initial greeting remains. `CaddyDecision.lead` and the
+  provider-neutral voice service remain in the codebase for future
+  conversational surfaces, but they are not rendered in this card-only flow.
+- Confidence remains deterministic engine data, but the confidence badge is
+  not user-facing. Labels such as `Medium-high` do not appear on the card.
+- `Target`, `Safe miss`, and `Why` are 21-point bold SF Rounded headings. Their
+  answers use a brighter 17-point card-detail color and concise, complete copy.
+  All existing engine branches were shortened; club selection, trouble order,
+  confidence calculation, persistence, and recommendation rules were not
+  changed.
+- Alternate play is collapsed by default in one full-width amber disclosure.
+  Its engine-owned alternate text appears only after a tap.
+- Remind me how is collapsed by default. It expands inside the card to a cyan
+  `COMMIT TO THIS` label and one compact execution cue. Log result is a
+  full-width cyan action in both reminder states.
+- Native chat scrolling prioritizes the newest Caddy Call and composer. Older
+  greeting content may scroll away when the expanded card needs the viewport;
+  it is not pinned or duplicated.
+- The roadmap's SINGLE NEXT ACTION remains outcome tap. This visual pass does
+  not implement or broaden that feature.
+
+### Implemented and proved
+
+- `CaddyCallCard` now owns independent alternate and reminder disclosure state,
+  keeps both controls at a 44-point minimum target, and requests a delayed
+  scroll after expansion so the final control is visible after animation.
+- `ThreadView` renders the deterministic decision directly as a card and clips
+  scrolled conversation content out of the status-bar region.
+- The generic iOS Simulator build succeeded. The complete `COLTSCADDYTests`
+  target passed with 21 tests. The focused structured-card UI flow passed after
+  submitting 165 yards, proving the removed bubble/badge, concise field copy,
+  collapsed and expanded Alternate play, collapsed and expanded reminder, and
+  Log result behavior.
+- Runtime proof is `Proof/caddy-call-approved-runtime.png`; the normalized
+  side-by-side is `Proof/caddy-call-approved-comparison.png`; the fidelity log
+  is `design-qa.md`.
+
+### Tried, warning, and recovery path
+
+- The first expanded-state capture crowded `Hide reminder` at the bottom edge.
+  The recovery waits for the 0.2-second disclosure animation before scrolling,
+  reduces only the card's outer spacing from 16 to 12 points, and clips the
+  scroll view at its real bounds. The rerun kept the full card and composer
+  visible.
+- The focused UI runs emitted Xcode's `DebuggerVersionStore` / `no debugger
+  version` warning. Each continued and returned `TEST SUCCEEDED`.
+- `Proof/phase-5-2-caddy-call-card.png` already contained an unrelated user
+  modification before this pass and was intentionally left untouched.
+
 ## 2026-07-17 — Remind me how uses static execution tips
 
 ### Decisions locked

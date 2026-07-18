@@ -7,14 +7,10 @@ struct ThreadView: View {
     @State private var messages: [ThreadMessage]
     @State private var isShotInputPresented = false
     @State private var isBagEditorPresented = false
-    @State private var isAwaitingCaddyResponse = false
     @State private var nuanceText = ""
     @State private var scrollRequestCount = 0
 
-    private let voiceService: CaddyVoiceService
-
-    init(voiceService: CaddyVoiceService = .live) {
-        self.voiceService = voiceService
+    init() {
         _messages = State(initialValue: Self.initialMessages)
     }
 
@@ -107,6 +103,7 @@ struct ThreadView: View {
                 .padding(.bottom, DS.Spacing.lg)
             }
             .scrollIndicators(.hidden)
+            .clipped()
             .accessibilityIdentifier("conversationFeed")
             .onAppear {
                 scrollToLatest(using: proxy)
@@ -116,7 +113,7 @@ struct ThreadView: View {
             }
             .onChange(of: scrollRequestCount) {
                 Task { @MainActor in
-                    await Task.yield()
+                    try? await Task.sleep(for: .milliseconds(250))
                     scrollToLatest(using: proxy)
                 }
             }
@@ -142,11 +139,10 @@ struct ThreadView: View {
                     )
             }
             .buttonStyle(.plain)
-            .disabled(isAwaitingCaddyResponse)
 
             ChatInputBar(
                 text: $nuanceText,
-                isEnabled: !isAwaitingCaddyResponse
+                isEnabled: true
             ) {
                 isShotInputPresented = true
             }
@@ -158,23 +154,15 @@ struct ThreadView: View {
         nuanceText = ""
 
         messages.append(ThreadMessage(content: .text(submission.summary, sender: .me)))
-        isAwaitingCaddyResponse = true
 
         let decision = CaddyEngine.recommend(for: submission.input, bag: currentBag)
-        let voiceInput = CaddyVoiceInput(shot: submission.input, decision: decision)
-
-        Task {
-            let response = await voiceService.response(for: voiceInput)
-            messages.append(ThreadMessage(content: .text(response, sender: .them)))
-            messages.append(
-                ThreadMessage(
-                    content: .caddyCall(
-                        CaddyCallItem(shot: submission.input, decision: decision)
-                    )
+        messages.append(
+            ThreadMessage(
+                content: .caddyCall(
+                    CaddyCallItem(shot: submission.input, decision: decision)
                 )
             )
-            isAwaitingCaddyResponse = false
-        }
+        )
     }
 
     @ViewBuilder
@@ -189,14 +177,13 @@ struct ThreadView: View {
                 target: call.decision.target,
                 safeMiss: call.decision.safeMiss,
                 why: call.decision.why,
-                confidence: call.decision.confidence.displayLabel,
                 alternate: .init(
                     type: call.decision.alternate.type,
                     text: call.decision.alternate.text
                 ),
                 executionTip: CaddyEngine.executionTip(for: call.shot.shotType),
                 isLogResultEnabled: !call.isLogged,
-                tipExpansionAction: { isExpanded in
+                expansionAction: { isExpanded in
                     guard isExpanded, message.id == messages.last?.id else { return }
                     scrollRequestCount += 1
                 },
@@ -265,21 +252,6 @@ private struct CaddyCallItem {
     let shot: CaddyShotInput
     let decision: CaddyDecision
     var isLogged = false
-}
-
-private extension ConfidenceBand {
-    var displayLabel: String {
-        switch self {
-        case .low:
-            "Low"
-        case .medium:
-            "Medium"
-        case .mediumHigh:
-            "Medium-high"
-        case .high:
-            "High"
-        }
-    }
 }
 
 #Preview {
