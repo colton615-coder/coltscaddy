@@ -13,9 +13,12 @@ struct CaddyCallCard: View {
     let why: String
     let confidence: String
     let alternate: Alternate?
+    let executionTip: String
     let isLogResultEnabled: Bool
-    let remindAction: () -> Void
+    let tipExpansionAction: (Bool) -> Void
     let logAction: () -> Void
+
+    @State private var isTipExpanded = false
 
     init(
         club: String,
@@ -25,8 +28,9 @@ struct CaddyCallCard: View {
         why: String,
         confidence: String,
         alternate: Alternate? = nil,
+        executionTip: String,
         isLogResultEnabled: Bool = true,
-        remindAction: @escaping () -> Void = {},
+        tipExpansionAction: @escaping (Bool) -> Void = { _ in },
         logAction: @escaping () -> Void = {}
     ) {
         self.club = club
@@ -36,8 +40,9 @@ struct CaddyCallCard: View {
         self.why = why
         self.confidence = confidence
         self.alternate = alternate
+        self.executionTip = executionTip
         self.isLogResultEnabled = isLogResultEnabled
-        self.remindAction = remindAction
+        self.tipExpansionAction = tipExpansionAction
         self.logAction = logAction
     }
 
@@ -80,8 +85,18 @@ struct CaddyCallCard: View {
                 }
             }
 
+            if isTipExpanded {
+                Text(executionTip)
+                    .font(DS.Font.body)
+                    .foregroundStyle(DS.Color.textSecondary)
+                    .accessibilityIdentifier("executionTip")
+            }
+
             HStack(spacing: DS.Spacing.sm) {
-                quietButton("Remind me how", action: remindAction)
+                quietButton("Remind me how") {
+                    isTipExpanded.toggle()
+                    tipExpansionAction(isTipExpanded)
+                }
                 Text("·")
                     .font(DS.Font.label)
                     .foregroundStyle(DS.Color.textTertiary)
@@ -154,7 +169,8 @@ private struct FieldBlock: View {
         safeMiss: "Short left leaves the easiest up-and-down.",
         why: "The fairway lie gives you enough control to favor the center and avoid the long-right bunker.",
         confidence: "Medium-high",
-        alternate: .init(type: "middle", text: "Aim center green and take the safer two-putt path.")
+        alternate: .init(type: "middle", text: "Aim center green and take the safer two-putt path."),
+        executionTip: CaddyEngine.executionTip(for: .full)
     )
     .padding(DS.Spacing.xl)
     .background(DS.Color.bg)

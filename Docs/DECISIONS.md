@@ -1,5 +1,56 @@
 # Decisions
 
+## 2026-07-17 — Remind me how uses static execution tips
+
+### Decisions locked
+
+- The July 17 nuance/ChatInputBar replacement work order was withdrawn because
+  the current source proved its premise wrong: `ThreadView` already wires
+  `ChatInputBar`, and `ShotSubmission.attachingNuance(_:)` already trims and
+  attaches nuance. Source outranked the work order, so the July 15 nuance
+  decision stands and nuance remains in the chat bar.
+- `Remind me how` is one static, engine-owned execution tip per `ShotType`.
+  The four tips are deterministic, work offline, and are never written,
+  re-voiced, or altered by the LLM or voice backend.
+- The Caddy Call card owns collapsed/expanded state. The tip opens inline below
+  the field blocks and above the action row; a second tap collapses it.
+- Free chat with the caddie remains v2. `Tendency` and `CoachingCue` remain
+  dormant and are not part of this lookup.
+- The voice backend is deferred to v1.1. v1 ships using the complete local
+  fallback lead already owned by CaddyEngine.
+- The Phase 5 visual audit remains deferred until after the outcome-tap loop.
+
+### Implemented and proved
+
+- Added `CaddyEngine.executionTip(for:)` as an exhaustive `ShotType` lookup and
+  passed a tip selected from `call.shot.shotType` into `CaddyCallCard`.
+- Added local card expansion state plus a newest-card scroll request so the
+  expanded tip and action row remain visible at the bottom of the thread.
+- A generic iOS Simulator build returned `BUILD SUCCEEDED`.
+- The focused `CaddyEngineTests` suite passed on iOS 26.5 `26.5 sim2`, including
+  the test that checks all four shot types for non-empty, prohibited-term-free
+  tips.
+- The complete COLTSCADDYTests target passed on the same simulator: 21 tests,
+  zero failures or skips.
+- The focused UI flow submitted a 165-yard full shot, proved the tip was
+  collapsed by default, expanded the exact full-shot tip, proved the latest
+  card actions remained hittable, collapsed the tip, and logged the result.
+  It passed in 14.890 seconds and retained an expanded-state screenshot.
+
+### Tried, warning, and recovery path
+
+- The first exact Swift Testing selector completed without executing a test;
+  its result bundle reported zero tests and was not counted as evidence. The
+  recovery was selecting the focused `CaddyEngineTests` suite, which executed
+  and passed the new test.
+- The focused UI run emitted Xcode's `DebuggerVersionStore` / `no debugger
+  version` warning. The test continued and returned `TEST SUCCEEDED`.
+- No physical-device run was performed. If the disclosure regresses, rerun
+  `everyShotTypeHasASafeExecutionTip` first, then
+  `testSubmittingShotRendersStructuredCaddyCallCard`. A unit failure isolates
+  the static lookup; a UI failure isolates card expansion or latest-item
+  scrolling.
+
 ## 2026-07-15 — Golfer/bag button reserves thread space
 
 ### Decisions locked

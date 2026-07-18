@@ -50,6 +50,19 @@ struct CaddyBagClub: Equatable {
 }
 
 enum CaddyEngine {
+    static func executionTip(for shotType: ShotType) -> String {
+        switch shotType {
+        case .full:
+            "Set the face, settle your feet, and make the same committed swing you use on the range."
+        case .chip:
+            "Pick the landing spot, set the handle, and keep turning through the strike. No last-second rescue mission."
+        case .putt:
+            "Set the face first, then match the stroke to the pace you chose. Once you are over it, stop negotiating."
+        case .tee:
+            "Build the same setup every time, finish your alignment, and swing through the picture. Steering it is not a plan."
+        }
+    }
+
     static func recommend(for context: ShotContext, profile: PlayerProfile) -> CaddyDecision {
         let input = CaddyShotInput(
             shotType: context.shotType,

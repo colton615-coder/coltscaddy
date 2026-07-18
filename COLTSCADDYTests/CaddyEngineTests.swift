@@ -7,6 +7,17 @@ import Testing
 @testable import COLTSCADDY
 
 struct CaddyEngineTests {
+    @Test func everyShotTypeHasASafeExecutionTip() {
+        for shotType in ShotType.allCases {
+            let tip = CaddyEngine.executionTip(for: shotType)
+            let normalizedTip = tip.lowercased()
+
+            #expect(tip.contains(where: { !$0.isWhitespace }))
+            #expect(!normalizedTip.contains("wind"))
+            #expect(!normalizedTip.contains("plays like"))
+        }
+    }
+
     @Test func teeShotWithPenaltyTroubleChoosesInPlayClubInsteadOfDriver() {
         let decision = CaddyEngine.recommend(
             for: CaddyShotInput(shotType: .tee, lie: .tee, trouble: [.water], distanceYards: 420),

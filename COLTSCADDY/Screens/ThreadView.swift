@@ -9,6 +9,7 @@ struct ThreadView: View {
     @State private var isBagEditorPresented = false
     @State private var isAwaitingCaddyResponse = false
     @State private var nuanceText = ""
+    @State private var scrollRequestCount = 0
 
     private let voiceService: CaddyVoiceService
 
@@ -113,6 +114,12 @@ struct ThreadView: View {
             .onChange(of: messages.count) {
                 scrollToLatest(using: proxy)
             }
+            .onChange(of: scrollRequestCount) {
+                Task { @MainActor in
+                    await Task.yield()
+                    scrollToLatest(using: proxy)
+                }
+            }
         }
     }
 
@@ -187,7 +194,12 @@ struct ThreadView: View {
                     type: call.decision.alternate.type,
                     text: call.decision.alternate.text
                 ),
+                executionTip: CaddyEngine.executionTip(for: call.shot.shotType),
                 isLogResultEnabled: !call.isLogged,
+                tipExpansionAction: { isExpanded in
+                    guard isExpanded, message.id == messages.last?.id else { return }
+                    scrollRequestCount += 1
+                },
                 logAction: {
                     logResult(for: message.id)
                 }

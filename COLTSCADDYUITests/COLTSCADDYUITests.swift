@@ -45,12 +45,31 @@ final class COLTSCADDYUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Safe miss"].exists)
         XCTAssertTrue(app.staticTexts["Why"].exists)
         XCTAssertTrue(app.staticTexts["Alternate"].exists)
-        XCTAssertTrue(app.buttons["Remind me how"].exists)
+
+        let executionTip = app.staticTexts[
+            "Set the face, settle your feet, and make the same committed swing you use on the range."
+        ]
+        let remindButton = app.buttons["Remind me how"]
+        XCTAssertTrue(remindButton.exists)
+        XCTAssertFalse(executionTip.exists)
+
+        remindButton.tap()
+
+        XCTAssertTrue(executionTip.waitForExistence(timeout: 2))
 
         let logResultButton = app.buttons["Log result"]
         XCTAssertTrue(logResultButton.exists)
         XCTAssertTrue(logResultButton.isHittable)
         XCTAssertTrue(logResultButton.isEnabled)
+
+        let expandedTipAttachment = XCTAttachment(screenshot: app.screenshot())
+        expandedTipAttachment.name = "Expanded Full-Shot Execution Tip"
+        expandedTipAttachment.lifetime = .keepAlways
+        add(expandedTipAttachment)
+
+        XCTAssertTrue(remindButton.isHittable)
+        remindButton.tap()
+        XCTAssertFalse(executionTip.exists)
 
         logResultButton.tap()
 

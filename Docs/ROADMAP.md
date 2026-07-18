@@ -2,8 +2,8 @@
 
 ## SINGLE NEXT ACTION
 
-Phase 5 item 5: complete the remaining spacing and motion polish in a separate
-loop, beginning with a screen-by-screen visual audit before changing code.
+Outcome tap — Log result captures one outcome value (good / left / right /
+short / long / poor contact) into ShotHistory.
 
 ---
 
@@ -40,8 +40,16 @@ next submitted shot, shown in the user's bubble, and cleared after submission.
 Whitespace-only input becomes `nil`. The engine does not use nuance to change
 the decision.
 
-## Phase 5 — Visual lock + polish 👉 YOU ARE HERE
-The feature work is complete; final spacing and motion polish remains.
+## v1 finishing loops 👉 YOU ARE HERE
+
+1. **Remind me how — one static execution tip per shot type.** ✅ DONE
+   - Tips are engine-owned, deterministic, offline, and expand inline on the
+     Caddy Call card.
+2. **Outcome tap — capture one outcome value in ShotHistory.** 👉 NEXT
+
+## Phase 5 — Visual lock + polish ⏸ DEFERRED
+The locked visual work remains intact. The final screen-by-screen spacing and
+motion audit resumes after the outcome-tap loop.
 
 1. **5.1 — Lock Range Finder tokens in Theme.swift.** ✅ DONE
 2. **5.2 — Polish the Caddy Call card layout hierarchy.** ✅ DONE
@@ -49,7 +57,7 @@ The feature work is complete; final spacing and motion polish remains.
 4. **Keep the golfer/bag button clear of thread content.** ✅ DONE
    - `ThreadView` now uses a top-trailing safe-area inset that reserves real
      layout space while keeping the existing button appearance and route.
-5. Final spacing and motion polish remains.
+5. Final spacing and motion polish remains. ⏸ DEFERRED
 
 ## Phase 6 — v2 and beyond (do NOT start any of this)
 - Activate tendency learning behavior (lifecycle already modeled)
