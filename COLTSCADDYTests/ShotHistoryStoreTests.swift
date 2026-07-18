@@ -18,7 +18,7 @@ struct ShotHistoryStoreTests {
         return ModelContext(container)
     }
 
-    @Test func logsOneHistoryWithTheCorrectContextAndRecommendation() throws {
+    @Test func logsOneHistoryWithTheCorrectContextRecommendationAndOutcome() throws {
         let modelContext = try makeContext()
         let shot = CaddyShotInput(
             shotType: .full,
@@ -37,6 +37,7 @@ struct ShotHistoryStoreTests {
         let loggedHistory = try ShotHistoryStore.log(
             shot: shot,
             decision: decision,
+            outcome: .left,
             in: modelContext
         )
 
@@ -51,9 +52,22 @@ struct ShotHistoryStoreTests {
         #expect(storedHistory.context.distanceYards == shot.distanceYards)
         #expect(storedHistory.context.nuance == shot.nuance)
         #expect(storedHistory.recommendationGiven == decision.play)
-        #expect(storedHistory.outcome == nil)
+        #expect(storedHistory.outcome == .left)
         #expect(storedHistory.missDirection == nil)
         #expect(storedHistory.contactQuality == nil)
         #expect(storedHistory.followedRecommendation == nil)
+    }
+
+    @Test func outcomeDisplayNamesCoverEveryPersistedCase() {
+        #expect(
+            Outcome.allCases.map(\.displayName) == [
+                "Good",
+                "Left",
+                "Right",
+                "Short",
+                "Long",
+                "Poor contact"
+            ]
+        )
     }
 }

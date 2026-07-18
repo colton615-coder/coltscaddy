@@ -1,5 +1,47 @@
 # Decisions
 
+## 2026-07-18 — Outcome tap uses the compact Quick Grid sheet
+
+### Decisions locked
+
+- Colt chose Proposal A, the compact Quick Grid, from the reviewed Figma
+  exploration: `https://www.figma.com/design/zUpYhXx5DKOwrRHd89Egkv`.
+- Tapping `Log result` opens a compact, local bottom sheet. It retains the
+  approved Caddy Call card underneath and presents the six existing outcomes
+  in a 2-by-3 grid: Good, Left, Right, Short, Long, and Poor contact.
+- Cancel or dismissing the sheet writes nothing. Choosing one outcome writes
+  exactly one `ShotHistory` record using the existing shot and decision, then
+  disables that card's Log result action.
+- The sheet uses the locked Range Finder colors and SF Rounded typography. It
+  does not add tendency behavior, coaching, a new data model, or a second
+  result flow.
+
+### Implemented and proved
+
+- `OutcomePickerSheet` is presented from `ThreadView` at a compact 360-point
+  sheet height with a visible drag indicator and 52-point outcome targets.
+- `ShotHistoryStore.log` now requires an `Outcome`, so the persistence seam
+  cannot write an outcome-less result. `Outcome.displayName` owns the six
+  user-facing labels.
+- The generic iOS Simulator build succeeded. The full `COLTSCADDYTests` target
+  passed on iOS 26.5 `26.5 sim2`: 22 tests, zero failures or skips. The
+  focused structured-card UI flow passed on the same simulator, proving all
+  six options render, Cancel leaves Log result enabled, and selecting Good
+  disables it.
+
+### Tried, warning, and recovery path
+
+- The first UI test found that the sheet container's accessibility identifier
+  was being applied to the Cancel button. The recovery makes the picker a
+  containing accessibility element, keeping both the sheet and Cancel button
+  independently addressable; the rerun passed.
+- The focused UI run emitted Xcode's `DebuggerVersionStore` / `no debugger
+  version` warning. The xcresult still reports one passed test and zero
+  failures.
+- No physical-device visual pass has been performed. If this loop regresses,
+  rerun `ShotHistoryStoreTests` for persistence and
+  `testSubmittingShotRendersStructuredCaddyCallCard` for the sheet flow.
+
 ## 2026-07-18 — Approved card-only Caddy Call refinement
 
 ### Decisions locked

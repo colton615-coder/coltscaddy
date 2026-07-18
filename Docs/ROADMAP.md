@@ -2,8 +2,8 @@
 
 ## SINGLE NEXT ACTION
 
-Outcome tap — Log result captures one outcome value (good / left / right /
-short / long / poor contact) into ShotHistory.
+Phase 5 final screen-by-screen visual audit — spacing and motion across the
+latest Caddy Call, outcome picker, bag button, tray, and composer.
 
 ---
 
@@ -47,11 +47,11 @@ the decision.
 1. **Remind me how — one static execution tip per shot type.** ✅ DONE
    - Tips are engine-owned, deterministic, offline, and expand inline on the
      Caddy Call card.
-2. **Outcome tap — capture one outcome value in ShotHistory.** 👉 NEXT
+2. **Outcome tap — capture one outcome value in ShotHistory.** ✅ DONE
 
-## Phase 5 — Visual lock + polish ⏸ DEFERRED
+## Phase 5 — Visual lock + polish ▶ NEXT
 The locked visual work remains intact. The final screen-by-screen spacing and
-motion audit resumes after the outcome-tap loop.
+motion audit now resumes after the completed outcome-tap loop.
 
 1. **5.1 — Lock Range Finder tokens in Theme.swift.** ✅ DONE
 2. **5.2 — Polish the Caddy Call card layout hierarchy.** ✅ DONE
@@ -69,7 +69,7 @@ motion audit resumes after the outcome-tap loop.
 4. **Keep the golfer/bag button clear of thread content.** ✅ DONE
    - `ThreadView` now uses a top-trailing safe-area inset that reserves real
      layout space while keeping the existing button appearance and route.
-5. Final spacing and motion polish remains. ⏸ DEFERRED
+5. **Final spacing and motion polish.** 👉 NEXT
 
 ## Phase 6 — v2 and beyond (do NOT start any of this)
 - Activate tendency learning behavior (lifecycle already modeled)

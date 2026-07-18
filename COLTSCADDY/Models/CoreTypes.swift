@@ -34,6 +34,23 @@ enum Outcome: String, Codable, CaseIterable {
     case short
     case long
     case poorContact
+
+    var displayName: String {
+        switch self {
+        case .good:
+            "Good"
+        case .left:
+            "Left"
+        case .right:
+            "Right"
+        case .short:
+            "Short"
+        case .long:
+            "Long"
+        case .poorContact:
+            "Poor contact"
+        }
+    }
 }
 
 enum InsightType: String, Codable, CaseIterable {

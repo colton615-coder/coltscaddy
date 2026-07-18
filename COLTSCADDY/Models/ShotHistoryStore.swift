@@ -10,6 +10,7 @@ enum ShotHistoryStore {
     static func log(
         shot: CaddyShotInput,
         decision: CaddyDecision,
+        outcome: Outcome,
         in modelContext: ModelContext
     ) throws -> ShotHistory {
         let shotContext = ShotContext(
@@ -21,7 +22,8 @@ enum ShotHistoryStore {
         )
         let history = ShotHistory(
             context: shotContext,
-            recommendationGiven: decision.play
+            recommendationGiven: decision.play,
+            outcome: outcome
         )
 
         modelContext.insert(history)

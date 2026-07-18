@@ -7,6 +7,7 @@ struct ThreadView: View {
     @State private var messages: [ThreadMessage]
     @State private var isShotInputPresented = false
     @State private var isBagEditorPresented = false
+    @State private var outcomePicker: OutcomePickerRequest?
     @State private var nuanceText = ""
     @State private var scrollRequestCount = 0
 
@@ -60,6 +61,18 @@ struct ThreadView: View {
         .sheet(isPresented: $isBagEditorPresented) {
             BagEditorView()
                 .presentationDragIndicator(.visible)
+        }
+        .sheet(item: $outcomePicker) { request in
+            OutcomePickerSheet(
+                club: request.club,
+                distanceText: request.distanceText
+            ) { outcome in
+                logResult(for: request.messageID, outcome: outcome)
+            }
+            .presentationDetents([.height(360)])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(28)
+            .presentationBackground(DS.Color.surface)
         }
     }
 
@@ -188,14 +201,28 @@ struct ThreadView: View {
                     scrollRequestCount += 1
                 },
                 logAction: {
-                    logResult(for: message.id)
+                    presentOutcomePicker(for: message.id)
                 }
             )
             .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
-    private func logResult(for messageID: UUID) {
+    private func presentOutcomePicker(for messageID: UUID) {
+        guard let message = messages.first(where: { $0.id == messageID }),
+              case let .caddyCall(call) = message.content,
+              !call.isLogged else {
+            return
+        }
+
+        outcomePicker = OutcomePickerRequest(
+            messageID: messageID,
+            club: call.decision.club,
+            distanceText: call.decision.distanceText
+        )
+    }
+
+    private func logResult(for messageID: UUID, outcome: Outcome) {
         guard let index = messages.firstIndex(where: { $0.id == messageID }),
               case var .caddyCall(call) = messages[index].content,
               !call.isLogged else {
@@ -206,6 +233,7 @@ struct ThreadView: View {
             try ShotHistoryStore.log(
                 shot: call.shot,
                 decision: call.decision,
+                outcome: outcome,
                 in: modelContext
             )
             call.isLogged = true
@@ -252,6 +280,14 @@ private struct CaddyCallItem {
     let shot: CaddyShotInput
     let decision: CaddyDecision
     var isLogged = false
+}
+
+private struct OutcomePickerRequest: Identifiable {
+    let messageID: UUID
+    let club: String
+    let distanceText: String
+
+    var id: UUID { messageID }
 }
 
 #Preview {

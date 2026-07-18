@@ -88,6 +88,19 @@ final class COLTSCADDYUITests: XCTestCase {
 
         logResultButton.tap()
 
+        XCTAssertTrue(app.otherElements["outcomePicker"].waitForExistence(timeout: 2))
+        for outcome in ["Good", "Left", "Right", "Short", "Long", "Poor contact"] {
+            XCTAssertTrue(app.buttons["outcome-\(outcome == "Poor contact" ? "poorContact" : outcome.lowercased())"].exists)
+        }
+
+        app.buttons["outcomeCancelButton"].tap()
+        XCTAssertTrue(logResultButton.waitForExistence(timeout: 2))
+        XCTAssertTrue(logResultButton.isEnabled)
+
+        logResultButton.tap()
+        XCTAssertTrue(app.buttons["outcome-good"].waitForExistence(timeout: 2))
+        app.buttons["outcome-good"].tap()
+
         XCTAssertFalse(logResultButton.isEnabled)
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
