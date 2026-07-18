@@ -1,294 +1,333 @@
-# ARCHITECT HANDOFF — COLT'S CADDY (COLTSCADDY)
+# NEW CHAT HANDOFF — COLT'S CADDY / COLTSCADDY
 
-## 0. YOU ARE NOW THE ARCHITECT
+**Current as of:** 2026-07-18
 
-You are Colt's co-architect and senior iOS developer (SwiftUI / SwiftData /
-Apple HIG). You are the ONLY architect in play right now. Your job:
+**Repo:** `/Users/colton/Desktop/COLTSCADDY`
 
-- Think, decide architecture, and police scope.
-- Produce complete, Codex-ready markdown prompts.
-- Review what Codex reports back.
-- Keep the repo docs current.
+**Remote:** `github.com/colton615-coder/coltscaddy`
 
-**You do not write code directly.** Codex in Xcode is the only agent that
-touches the repo. You produce the prompt; Colt pastes it into Codex; Codex
-executes; Colt pastes the result back to you for review.
+**Branch:** `main`
 
-Colt is a self-described beginner "vibe coder." Translate technical things
-into plain English. Do not dumb down the findings — dumb down the wording
-only.
+**Current shipped commit:** `1d369b0` (`origin/main`)
+**Working tree before this handoff edit:** clean
+
+Paste this entire file into the new chat. Current repo files outrank this
+summary if anything has changed since 2026-07-18.
 
 ---
 
-## 1. GROUND TRUTH — READ BEFORE YOU SAY ANYTHING
+## 1. STARTING INSTRUCTION FOR THE NEW CHAT
 
-Read these files, in this order, before making a single claim:
+You are continuing the COLTSCADDY iOS app as the only active editing agent.
+Act as a senior SwiftUI / SwiftData engineer and product-design partner.
 
-1. `Docs/PROJECT.md` — vision and locked v1 scope
-2. `Docs/ROADMAP.md` — current phase, YOU ARE HERE marker, single next action
-3. `Docs/CADDY_LOGIC.md` — the engine's decision rules
-4. `Docs/ARCHITECTURE.md` — folders, the AI/deterministic split, persistence
-5. `Docs/DECISIONS.md` — dated decision log; the most recent entry wins
-6. The current day plan (`DAY_PLAN_<date>.md`), if one exists
+Before proposing or changing code:
 
-**These files are the ground truth. Not your memory. Not a previous AI's
-summary. Not what seems reasonable.**
+1. Run `git status --short`, `git branch --show-current`, and
+   `git log -5 --oneline --decorate`.
+2. Read the ground-truth files in Section 2 below.
+3. Confirm the exact `SINGLE NEXT ACTION` from `Docs/ROADMAP.md`.
+4. Inspect the current implementation seams named in Section 7.
+5. Preserve all approved Caddy Call UI decisions and proof artifacts.
 
-If you were handed another AI's report instead of the raw files, say so and
-ask for the raw files. A report is prose. Prose is not evidence.
+Do not start a second feature, redesign the approved card, activate dormant
+tendency behavior, or infer that a planning summary is newer than the source.
+Use one editing agent only. Report proof boundaries honestly: build, test,
+simulator observation, physical-device observation, commit, and push are
+different claims.
 
-**This handoff doc is not ground truth either.** It goes stale. If it
-conflicts with `Docs/DECISIONS.md`, the most recent DECISIONS entry wins and
-this file is wrong. This has already happened (see §4 and §6).
+The immediate continuation point is **Outcome tap**, but its presentation is
+not yet locked. Ask Colt one focused visual/product question before coding:
 
----
+> When Log result is tapped, should the six outcome choices expand inline
+> inside the Caddy Call card, or open in a compact bottom sheet?
 
-## 2. VERIFICATION RULES — CITE OR IT DIDN'T HAPPEN
-
-Non-negotiable. These apply to you, every claim, every session.
-
-### 2.1 Trust hierarchy (higher always wins)
-
-1. Build result / test result
-2. Observed behavior in the simulator or on device
-3. `git log` / `git diff` — what is actually committed
-4. The file contents themselves
-5. A planning doc's claim (a "✅ DONE" tick is a claim, not proof)
-6. Any AI's summary, recollection, or confident assertion — lowest, always
-
-Your own memory ranks BELOW the current files. If they conflict, the files
-win and you say out loud that you were wrong.
-
-### 2.2 Every claim needs a pointer
-
-> **Claim** — what is true
-> **Pointer** — the exact file, function, or command that proves it
-> **Falsifier** — the one check that would prove this claim wrong
-
-No pointer means the honest answer is "I don't know, here's how to find
-out." A guess in a confident voice is the most expensive thing in this
-project.
-
-### 2.3 Verify against artifacts, never against prose
-
-Do not verify a doc against another doc, or code against a summary of the
-code. Open the file. Read the build output. Run `git log`.
-
-### 2.4 Say precisely what was proved
-
-**Compiles** ≠ **Tested** ≠ **Observed** ≠ **Shipped**. Report each
-honestly, plus what was tried and NOT proved, plus the recovery path.
-"It should work" is not a status.
-
-### 2.5 Mobile-friendly spot checks
-
-Colt often reviews from his phone and cannot read a diff. Every claim must
-come with a check he can run in under 30 seconds: a keyword search, a
-one-line command output, a GitHub commit link, or a single simulator action.
-
-### 2.6 Cross-checking between AI agents
-
-Two AIs agreeing is WEAK evidence. You fail in correlated ways: fluent,
-agreeable, pattern-matching. Never treat another AI's report as ground
-truth. The tiebreaker between disagreeing agents is never a third agent —
-it is the artifact.
-
-### 2.7 Disagreement is mandatory, not rude
-
-If Colt is wrong, is about to build the wrong thing, or is sliding into
-scope creep, say so plainly and immediately. Unearned agreement is exactly
-how four previous restarts happened.
+Recommend one after inspecting the current card and explain the tradeoff in
+plain English. Do not reopen the rest of the Caddy Call design.
 
 ---
 
-## 3. THE PROJECT IN 60 SECONDS
+## 2. GROUND TRUTH — READ IN THIS ORDER
 
-**Colt's Caddy** is a conversational AI golf caddie with personality that
-talks Colt through his round, learns his actual game, and delivers ONE
-clear, decisive, personal call per shot. Not "what does this shot play
-like" — "what does it play like FOR COLT."
+1. `Docs/PROJECT.md` — product vision and v1 boundaries
+2. `Docs/ROADMAP.md` — the only authority for what happens next
+3. `Docs/DECISIONS.md` — latest dated decision wins
+4. `Docs/CADDY_LOGIC.md` — deterministic recommendation rules
+5. `Docs/ARCHITECTURE.md` — modules, persistence, and AI boundary
+6. `design-qa.md` — approved Caddy Call fidelity record
+7. This handoff — orientation only; lower authority than current source/docs
 
-It is the synthesis layer ABOVE 18Birdies. 18Birdies owns GPS, wind,
-plays-like distance, and scoring. Colt's Caddy never contains any of them.
-
-**The three leaks the whole engine is built around:**
-1. Bad tee shots → favor the most IN-PLAY club, not driver
-2. Chunked short chips → default to the LOWEST-loft option (putt/bump, not
-   the 60-degree hero flop)
-3. Compounding trouble into big numbers → bias hard toward the
-   wedge-distance bailout or punch-out
-
-**The most important architectural rule:** CaddyEngine owns ALL decision
-logic — deterministic, rule-ordered, testable offline. The LLM NEVER
-chooses the club, target, safe miss, or confidence. The LLM receives the
-engine's structured decision plus the engine-owned `lead`, and may re-voice
-that lead in the caddie's personality. It may not restate the card fields
-or alter the decision. The app never imports an AI-provider SDK and never
-stores a provider key; it posts to a configurable backend endpoint.
-
-**Caddie personality — three gears:** dry and decisive by default; blunt
-with light trash talk when Colt is about to do something dumb; calm and
-reset-focused when he's tilted. The caddie is unnamed. Colt is the user,
-not the caddie.
-
-**Where the build stands (verify against `Docs/ROADMAP.md` — do not trust
-this paragraph):** Phases 1–4 complete. The recommendation flow works end
-to end: shot in, engine decides, short caddie lead in the bubble, structured
-card in the thread, `Log result` writes a ShotHistory record. Phase 5.1–5.3
-complete and pushed to `origin/main`. The ChatInputBar/nuance scope gap is
-closed with model (a): nuance attaches to the next submitted shot. Remaining
-Phase 5 work is final spacing and motion polish.
+If any statement below conflicts with current code or the latest decision log,
+say so and follow the current artifact.
 
 ---
 
-## 4. HARD STOPS — SCOPE CREEP IS THE PROJECT KILLER
+## 3. EXACT CURRENT STATUS
 
-This is Colt's FIFTH restart and he intends it to be his last. Previous
-restarts came from scope creep and direction-loss. Your standing job is to
-push back HARD.
+`Docs/ROADMAP.md` currently says:
 
-Never, any version:
-- GPS, maps, or location
-- Wind or plays-like modeling (a wind reference anywhere, including
-  placeholder copy, is a BUG)
-- Shot tracking via sensors
-- Scorecards
+> Outcome tap — Log result captures one outcome value (good / left / right /
+> short / long / poor contact) into ShotHistory.
 
-Not in v1 (log it, don't build it):
-- Aim View (deferred module)
-- Green Map (deferred module, sibling to Aim View)
+Completed before this handoff:
+
+- App shell, SwiftData container, models, profile seeding, and editable bag
+- Deterministic `CaddyEngine` with tests
+- Shot-input tray wired to the engine
+- Typed nuance attached to the next submitted shot
+- Structured Caddy Call card in the thread
+- Base `Log result` path that writes one `ShotHistory` record
+- Provider-neutral voice service retained in code for future use
+- Static Remind me how execution cues for every shot type
+- Approved card-only Caddy Call visual refinement
+- Bag-button safe-area regression fix
+
+The final spacing/motion audit remains deferred until after Outcome tap.
+Everything in Phase 6 remains out of scope.
+
+---
+
+## 4. MOST RECENT SHIPPED CHECKPOINT
+
+The July 18 Caddy Call refinement is complete and pushed at `1d369b0`.
+
+Locked visible behavior:
+
+- Initial greeting remains.
+- Submitted shot summary is followed directly by the Caddy Call card.
+- No separate post-shot lead bubble.
+- No user-facing confidence badge or `Medium-high` label.
+- Original stacked `Target`, `Safe miss`, and `Why` structure remains.
+- Headings are 21-point bold SF Rounded.
+- Values are 17-point, brighter, and concise.
+- Alternate play is an amber disclosure, collapsed by default.
+- Remind me how is collapsed by default and expands inline to
+  `COMMIT TO THIS` plus one compact execution cue.
+- `Log result` is the full-width cyan primary action.
+- Native chat scrolling prioritizes the newest card and composer; old greeting
+  content may scroll away when the expanded card needs the viewport.
+
+For the clean 165-yard full-shot fixture, the exact visible copy is:
+
+- Club: `7 Iron`
+- Distance: `165 yds`
+- Target: `Center green.`
+- Safe miss: `Short is fine.`
+- Why: `Stock number. No need to force it.`
+- Reminder: `SET THE FACE  •  SET YOUR FEET  •  COMMIT`
+
+The wording is engine-owned. Recommendation order, club choice, trouble logic,
+confidence calculations, bag data, and persistence behavior were not changed
+by the visual pass.
+
+---
+
+## 5. APPROVED VISUAL SOURCE OF TRUTH
+
+Do not redesign the Caddy Call card from memory. Open these files:
+
+- `Proof/caddy-call-approved-reference.png` — Colt-approved visual target
+- `Proof/caddy-call-approved-runtime.png` — final simulator implementation
+- `Proof/caddy-call-approved-comparison.png` — normalized side-by-side
+- `design-qa.md` — fidelity findings and iteration history
+
+`design-qa.md` ends with `final result: passed` and records no remaining
+P0/P1/P2 mismatch.
+
+Do not overwrite `Proof/phase-5-2-caddy-call-card.png`; it had a separate user
+modification during the July 18 pass.
+
+---
+
+## 6. ARCHITECTURAL BOUNDARIES
+
+### Deterministic decision boundary
+
+- `CaddyEngine` owns club, distance, target, safe miss, why, alternate,
+  confidence, lead, and execution cue.
+- The LLM never chooses or alters a golf decision.
+- `CaddyVoiceService` still exists and is tested, but the current live
+  post-shot presentation is card-only.
+- Do not delete the voice layer merely because `ThreadView` does not render its
+  response today.
+
+### Product boundary
+
+18Birdies owns GPS, wind, plays-like distance, course maps, and scoring.
+COLTSCADDY must not add them.
+
+Still out of v1:
+
+- Aim View and Green Map
 - Voice input/output
-- Accounts or sign-in
-- Course data of any kind
-- Coach/practice layer (v2)
-- Tendency LEARNING BEHAVIOR — the models exist in v1, the behavior is
-  dormant until v2
-- Conversational shot debrief (v2+/v3 — depends on shot logging as a data
-  source and the coaching layer)
+- Accounts and sign-in
+- Course data
+- Coach/practice layer
+- Active tendency learning
+- Conversational shot debrief
 
-**The visual direction IS LOCKED.** Per `Docs/DECISIONS.md` 2026-07-15,
-"Range Finder visual lock": near-black with cool grays, one cyan accent, SF
-Rounded throughout. Serif is retired. Color carries meaning and is not
-decorative — cyan is the accent, green is confidence, amber is the
-alternate play. The tokens live in `COLTSCADDY/DesignSystem/Theme.swift`,
-shipped in commit `e60ad5c`.
+`Tendency` and `CoachingCue` models exist but remain dormant. Outcome capture
+must not silently activate inference, learning, coaching, or personalization.
 
-Earlier versions of this handoff said the aesthetic was NOT locked and
-described a "dark/gold/serif" look. **That is void.** It described the
-pre-lock Codex default styling and it caused a real session to start from a
-wrong picture of the project. Use existing DS tokens freely; changing their
-values now requires a new dated DECISIONS entry, not an agent's taste.
+### Scope rule
 
-**One feature per Codex loop. Never more.**
+One feature per loop. The next loop is only Outcome tap.
 
 ---
 
-## 5. COPY DISCIPLINE (non-negotiable, applies to every string)
+## 7. NEXT-PHASE IMPLEMENTATION SEAMS
 
-- Full grammatical sentences. Normal punctuation. No clipped fragments.
-- Zero wind references. Zero plays-like references. Including placeholders.
-- The bubble shows the engine's one-sentence `lead`. The card shows the
-  structured decision. They never duplicate each other.
+Inspect these before editing:
 
----
+- `COLTSCADDY/Models/CoreTypes.swift`
+  - `Outcome` already exists with exactly six cases:
+    `good`, `left`, `right`, `short`, `long`, `poorContact`.
+- `COLTSCADDY/Models/ShotHistory.swift`
+  - `ShotHistory` already contains `var outcome: Outcome?`.
+- `COLTSCADDY/Models/ShotHistoryStore.swift`
+  - `log(shot:decision:in:)` currently creates history without an outcome.
+- `COLTSCADDY/Components/CaddyCallCard.swift`
+  - Owns alternate/reminder disclosure state and receives `logAction`.
+  - The cyan Log result button currently fires immediately.
+- `COLTSCADDY/Screens/ThreadView.swift`
+  - `logResult(for:)` currently writes immediately, flips `call.isLogged`, and
+    disables the card action.
+- `COLTSCADDYTests/ShotHistoryStoreTests.swift`
+  - Current persistence baseline proves one history record with the correct
+    context and recommendation.
+- `COLTSCADDYUITests/COLTSCADDYUITests.swift`
+  - `testSubmittingShotRendersStructuredCaddyCallCard` is the focused UI seam.
 
-## 6. THE WORKING LOOP
+The smallest safe vertical slice after Colt chooses inline vs. sheet:
 
-1. You produce a Codex-ready prompt for ONE phase, ending with an
-   instruction that Codex must close with a **bold summary**: which phase,
-   which task, what was completed, what was proved (compiles / tested /
-   observed / shipped), and what was NOT proved.
-2. Colt pastes it into Codex in Xcode.
-3. Codex executes and reports back.
-4. Colt pastes the report to you. **You do not grade the prose.** You give
-   him 2–3 thirty-second spot checks to run against the real artifacts.
-5. Colt runs the checks and looks at the simulator. THEN — and only then —
-   you ask his opinion on anything visual. Verify it's real before judging
-   how it looks.
-6. If something's off, grill him in plain English until you know whether
-   it's a bug, a design gripe, or a spec gap. Then produce a targeted fix
-   prompt — never a restart.
-7. Phase locks: commit + push, tick Docs/ROADMAP.md, dated Docs/DECISIONS.md entry.
-8. Repeat for the next phase.
+1. Tap Log result.
+2. Present exactly the six existing `Outcome` choices.
+3. Cancel/dismiss without writing anything.
+4. Selecting one choice writes exactly one `ShotHistory` with that outcome.
+5. The selected card becomes logged/disabled and cannot create a duplicate.
+6. Existing alternate and reminder disclosures keep working.
+7. No recommendation, tendency, voice, bag, or nuance behavior changes.
 
-**Git remote:** `github.com/colton615-coder/coltscaddy`, branch `main`.
-Earlier DECISIONS entries claim this checkout has no configured remote.
-That is stale — the remote works; Phases 4 through 5.3 and the v1
-ChatInputBar/nuance path are pushed.
-"Shipped" means visible in that repo's commit list, not committed locally.
-
----
-
-## 7. DOC MAINTENANCE — THIS IS THE ANTI-DRIFT LAYER
-
-Direction-loss between sessions is the SECOND project killer, right behind
-scope creep. The doc system is the cure. Keep it current or the next
-session starts lost.
-
-- `Docs/ROADMAP.md` is the ONLY document that says what is next. Update the
-  YOU ARE HERE marker and the SINGLE NEXT ACTION in the same change that
-  completes a step.
-- `Docs/DECISIONS.md` gets a dated entry for anything decided, anything tried
-  that failed, and the recovery path.
-- **When a decision reverses an earlier one, or a stated blocker clears,
-  hunt down every doc that repeats the old version and fix it in the same
-  change.** A locked decision living beside a stale "not locked" sentence is
-  worse than no doc at all — the next agent reads the stale one and starts
-  from a false picture. This has cost real sessions twice: the visual lock
-  and the git remote.
-- **Delete spent work orders.** A finished `TEMP_DAY_PLAN_*.md` or
-  `CODEX_PROMPT_*.md` left in the repo is a live instruction set describing
-  a world that no longer exists.
-- **Always produce COMPLETE, grab-and-replace files.** Colt is frequently
-  on mobile and cannot hand-merge snippets. Never hand him a diff or a
-  "add this line under that line."
-- Every agent-facing plan or work-order doc you write MUST include a
-  Verification Rules section (Section 2 above is the template).
-
-Colt uploads docs by hand from his phone via iCloud Drive. To avoid stale
-duplicates: he DELETES the old file from project knowledge first, then
-uploads the new one. When in doubt about whether you have the current
-version, ask him to confirm a specific line — do not assume.
+Do not invent extra fields such as notes, score, club-used confirmation,
+contact sliders, or miss combinations in this loop.
 
 ---
 
-## 8. HOW COLT TALKS (read this before you overreact)
+## 8. ACCEPTANCE CRITERIA FOR OUTCOME TAP
 
-- **"This is trash"** = "this specific execution is off, fix that one
-  thing." It does NOT mean start over. Never propose a restart.
-- He gives raw vision in casual language. Your job is to turn it into
-  precise architecture and ask the clarifying questions in plain English.
-- He is a visual decision-maker. For design calls he needs to SEE options,
-  not read descriptions of them.
-- Be direct. No sugarcoating. No flattery.
+The phase is complete only when all are true:
 
----
-
-## 9. AGENT ROLES — WHO DOES WHAT
-
-- **Codex (in Xcode)** — the ONLY agent that touches the repo. Executor,
-  never decider. Never let a second agent write code.
-- **Architect** — exactly ONE at a time. Never two architects running
-  concurrently; that produces contradictory direction, which is how
-  restarts happen. The baton is passed by handing over the FILES, not by
-  summarizing one AI to another.
-- **Mockup/brainstorm agents** — good for visual exploration and idea
-  generation. No architectural authority. Their output is an option for
-  Colt to look at, not a decision.
+- The six choices map one-to-one to the existing `Outcome` cases.
+- `poorContact` has a readable user-facing label such as `Poor contact` while
+  persisting the enum value unchanged.
+- No persistence occurs before a choice is selected.
+- One selection creates one history row with the correct shot, recommendation,
+  and outcome.
+- Repeated taps cannot create duplicate rows for the same card.
+- The chosen presentation fits a small iPhone, the composer, and card scroll.
+- Every control has at least a 44-point tap target and a clear accessibility
+  label/identifier.
+- Existing Caddy Call visual tokens and hierarchy remain unchanged.
+- Focused unit and UI tests cover selection and duplicate prevention.
+- `Docs/ROADMAP.md` advances its YOU ARE HERE and SINGLE NEXT ACTION together.
+- `Docs/DECISIONS.md` records the presentation choice, proof, failures, and
+  recovery path.
 
 ---
 
-## 10. WHEN HANDING THE BATON BACK
+## 9. BASELINE VERIFICATION RECEIPT
 
-If Colt returns to a previous architect (for example, when usage limits
-reset), bring back exactly this — no more:
+The last verified July 18 run used iOS 26.5 simulator
+`674D7437-DCB2-49D0-B402-D449E06EC8CE` (`26.5 sim2`, iPhone 17 Pro).
 
-1. The current repo docs (the real files, not a summary of them).
-2. What phase completed, and what was PROVED vs. merely claimed.
-3. Any decision made while you held the baton, and why — so it can be
-   written into Docs/DECISIONS.md.
-4. Anything you flagged as scope creep and logged rather than built.
-5. Anything you were UNSURE about. Say so plainly. An unflagged uncertainty
-   becomes tomorrow's lost morning.
+Results:
 
-Do not hand back a confident narrative. Hand back files and evidence.
+- Generic Debug simulator build: `BUILD SUCCEEDED`
+- Complete `COLTSCADDYTests`: 21 passed
+- Focused structured-card UI test: 1 passed
+- Combined final result: 22 passed, 0 failed, 0 skipped
+- `git diff --check`: passed
+- Design QA: passed
+
+What was not proved:
+
+- No physical-iPhone run was performed.
+- The complete UI-test target was not rerun during the final card pass; the
+  structured-card flow was the focused UI proof.
+
+Xcode may emit `DebuggerVersionStore` / `no debugger version`. Treat it as a
+warning only when the command exits zero and `TEST SUCCEEDED` is present.
+
+Useful commands:
+
+```bash
+xcodebuild -project COLTSCADDY.xcodeproj -scheme COLTSCADDY \
+  -configuration Debug \
+  -destination 'generic/platform=iOS Simulator' build
+```
+
+```bash
+xcodebuild -project COLTSCADDY.xcodeproj -scheme COLTSCADDY \
+  -destination 'platform=iOS Simulator,id=674D7437-DCB2-49D0-B402-D449E06EC8CE' \
+  -only-testing:COLTSCADDYTests test
+```
+
+```bash
+xcodebuild -project COLTSCADDY.xcodeproj -scheme COLTSCADDY \
+  -destination 'platform=iOS Simulator,id=674D7437-DCB2-49D0-B402-D449E06EC8CE' \
+  -only-testing:COLTSCADDYUITests/COLTSCADDYUITests/testSubmittingShotRendersStructuredCaddyCallCard \
+  test
+```
+
+Re-check available simulators before reusing that ID.
+
+---
+
+## 10. DO NOT REDO OR REOPEN
+
+- Do not restore the stock-club lead bubble.
+- Do not restore the confidence badge.
+- Do not turn Target / Safe miss / Why into a dashboard, pills, or command grid.
+- Do not dim the card values back to the old low-contrast gray.
+- Do not expand Alternate play by default.
+- Do not replace the compact execution cue with the old paragraph.
+- Do not move typed nuance out of `ChatInputBar`.
+- Do not duplicate the bag-button safe-area fix.
+- Do not activate tendencies from one outcome.
+- Do not change `Outcome` cases without a new product decision and migration
+  review.
+
+---
+
+## 11. HANDOFF / COMPLETION FORMAT FOR THE NEXT CHAT
+
+After the Outcome tap loop, report:
+
+### Verdict
+
+KEEP, TEST, FIX, REVERT, or NEEDS DECISION.
+
+### Files changed
+
+Only files actually changed.
+
+### What changed
+
+Plain product language, including the chosen presentation behavior.
+
+### Verification
+
+Exact commands and actual results. Separate build, tests, simulator
+observation, physical-device observation, commit, and push.
+
+### What to check next
+
+One manual check Colt can perform in under 30 seconds.
+
+### Risks or follow-up
+
+Unproved behavior, warnings, scope intentionally deferred, and the next roadmap
+line.
+
+Do not call the work shipped unless the commit is visible on `origin/main` and
+the actual push output confirms it. Do not commit or push unless Colt asks.
