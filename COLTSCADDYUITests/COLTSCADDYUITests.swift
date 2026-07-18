@@ -211,6 +211,55 @@ final class COLTSCADDYUITests: XCTestCase {
     }
 
     @MainActor
+    func testPlayAndHistoryShellPreservesDraftAndShowsLoggedShot() throws {
+        let app = XCUIApplication()
+        app.launchArguments.append("-UITestResetHistory")
+        app.launch()
+
+        let playTab = app.tabBars.buttons["Play"]
+        let historyTab = app.tabBars.buttons["History"]
+        XCTAssertTrue(playTab.waitForExistence(timeout: 2))
+        XCTAssertTrue(playTab.isSelected)
+
+        let nuanceField = app.textFields["nuanceTextField"]
+        XCTAssertTrue(nuanceField.waitForExistence(timeout: 2))
+        nuanceField.tap()
+        nuanceField.typeText("Stay below the hole.")
+
+        historyTab.tap()
+        XCTAssertTrue(app.otherElements["historyEmptyState"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["No shots yet"].exists)
+
+        app.buttons["Go to Play"].tap()
+        XCTAssertTrue(playTab.isSelected)
+        XCTAssertEqual(nuanceField.value as? String, "Stay below the hole.")
+
+        app.buttons["nuanceSendButton"].tap()
+        let distanceField = app.textFields["shotDistanceField"]
+        XCTAssertTrue(distanceField.waitForExistence(timeout: 2))
+        distanceField.tap()
+        distanceField.typeText("165")
+        app.buttons["Ask the caddie"].tap()
+
+        let logResultButton = app.buttons["Log result"]
+        XCTAssertTrue(logResultButton.waitForExistence(timeout: 5))
+        logResultButton.tap()
+        XCTAssertTrue(app.buttons["outcome-good"].waitForExistence(timeout: 2))
+        app.buttons["outcome-good"].tap()
+
+        historyTab.tap()
+        XCTAssertTrue(app.scrollViews["historyTimeline"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["7 Iron to 165"].exists)
+        XCTAssertTrue(app.staticTexts["Good"].exists)
+        XCTAssertTrue(app.staticTexts["Today"].exists)
+
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "Play and History Shell"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
     func testLaunchPerformance() throws {
         // This measures how long it takes to launch your application.
         measure(metrics: [XCTApplicationLaunchMetric()]) {

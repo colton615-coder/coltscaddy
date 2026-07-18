@@ -23,6 +23,9 @@ struct COLTSCADDYApp: App {
                 CoachingCue.self
             )
             try ProfileSeeder.seedIfNeeded(in: container.mainContext)
+#if DEBUG
+            try Self.resetHistoryForUITestingIfNeeded(in: container.mainContext)
+#endif
         } catch {
             fatalError("Failed to set up persistence: \(error)")
         }
@@ -30,9 +33,23 @@ struct COLTSCADDYApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ThreadView()
+            AppShellView()
                 .preferredColorScheme(DS.preferredColorScheme)
         }
         .modelContainer(container)
     }
 }
+
+#if DEBUG
+private extension COLTSCADDYApp {
+    static func resetHistoryForUITestingIfNeeded(in modelContext: ModelContext) throws {
+        guard ProcessInfo.processInfo.arguments.contains("-UITestResetHistory") else {
+            return
+        }
+
+        let histories = try modelContext.fetch(FetchDescriptor<ShotHistory>())
+        histories.forEach(modelContext.delete)
+        try modelContext.save()
+    }
+}
+#endif
